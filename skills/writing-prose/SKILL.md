@@ -1,6 +1,6 @@
 ---
 name: writing-prose
-Write, revise, or critique prose when clarity, reader comprehension, structure, tone, or concise communication matters—from commit messages and pull request descriptions to decision documents, documentation, announcements, emails, and explanations.
+description: Write, revise, or critique prose when clarity, reader comprehension, structure, tone, or concise communication matters—from commit messages and pull request descriptions to decision documents, documentation, announcements, emails, and explanations.
 ---
 
 # Writing Prose
@@ -13,9 +13,9 @@ Practice **earned brevity**: prefer the shortest form that preserves the reader'
 
 ## Process
 
-1. **Establish the brief.** Identify the purpose, audience, medium (for example: commit message, pull request description, decision document, email, or documentation), desired reader action, required facts, constraints, and tone. Infer only what the request makes reliable; ask a focused question when an unknown would materially change the result.
+1. **Establish the brief.** Identify the purpose, audience, medium (for example: commit message, pull request description, decision document, email, or documentation), desired reader action, required facts, constraints, and tone. Set an **information budget**: decide the level of detail this reader needs for this medium, then distinguish essential context from useful-but-optional detail and material that does not serve the purpose. Infer only what the request makes reliable; ask a focused question when an unknown would materially change the result.
    
-   **Done when:** you can state what this reader should know, feel, decide, or do after reading.
+   **Done when:** you can state what this reader should know, feel, decide, or do after reading, the necessary level of detail, and what the document will deliberately leave out.
 
 2. **Build the reader path.** Separate the message into:
    - the main point or request;
@@ -41,27 +41,29 @@ Practice **earned brevity**: prefer the shortest form that preserves the reader'
 
    **Done when:** readers can distinguish facts, sources, assumptions, and missing information.
 
-5. **Edit in passes.** First check completeness and accuracy, then the reader path, then sentences and mechanics. Make an explicit brevity pass: remove repetition, filler, throat-clearing, vague intensifiers, and details that do not serve the purpose. Preserve necessary context rather than shortening mechanically.
+5. **Edit in passes.** First check completeness and accuracy, then the reader path, then sentences and mechanics. Make an explicit brevity pass against the information budget: remove repetition, filler, throat-clearing, vague intensifiers, implementation detail the reader cannot use, and detail that does not change understanding, a decision, or an action. Preserve necessary context rather than shortening mechanically.
 
-   **Done when:** every remaining sentence advances the reader's path, the document is no longer than its reader needs, and the prose is accurate, readable, and ready for its medium.
+   **Done when:** every remaining sentence advances the reader's path, the document includes the necessary level of detail and no more, and the prose is accurate, readable, and ready for its medium.
 
 ## General guidelines
 
-- Make the title specific enough that likely readers can judge relevance before opening the document. Use the opening sentence or paragraph to confirm its subject, scope, and intended reader.
 - Lead with the conclusion, request, or decision when readers need it quickly; follow with the reason and detail.
 - Prefer one main idea per sentence and one controlling idea per paragraph.
 - Name the actor, action, owner, deadline, and condition when they matter. Replace ambiguous references such as “this,” “it,” or “they” with a noun when the referent is not immediate.
 - Treat identifiers as references, not explanations. In a pull request description, state the user or system outcome, the material change, and notable constraints before or alongside a ticket link. State the larger initiative or problem that makes the work necessary; “part of #123” does not explain why the work exists. “Completes #123” is useful metadata after readers know what #123 required; it is not a summary.
 - Use parallel grammar for parallel ideas. Keep modifiers beside the words they modify.
-- Let prose, not formatting, do the explanatory work. Use bold, italics, callouts, lists, and tables only when their form improves how readers consume the specific content—not merely to add emphasis or break up a narrative.
-- Use lists for real sets of values, options, requirements, steps, or similarly discrete items. Use tables for compact comparisons, structured lookup, or mathematical data with small cells; otherwise prefer sentences and paragraphs.
 - Choose precise quantities, dates, and examples over broad claims when precision helps the reader act or assess a claim.
 - Use qualifiers only when they change the meaning. State an exception directly instead of hiding it in a long sentence.
 - Keep terminology consistent. Define specialized terms for readers who need them, then use the defined term consistently.
 - Prefer short paragraphs, but vary sentence length naturally. Concision is removing wasted work for the reader, not merely reducing word count.
+- Set detail by consequence: include a fact when it changes the reader's understanding, decision, action, or ability to trust the document. Omit background, implementation detail, alternatives, and edge cases that do none of those things; link durable optional detail when readers may need it later.
 - Use the smallest structure that fits the message: a precise commit subject instead of a paragraph; a few headings instead of a long unbroken narrative; no heading where a single sentence is sufficient.
 - Read the draft as its intended reader: look for questions they would ask, assumptions they may not share, and actions they could misread.
 
 ## Deliverable
 
 Unless the request asks for critique only, provide the finished prose. When useful, briefly note material assumptions, placeholders, or a small number of consequential editorial choices.
+
+## Maintenance
+
+When this skill gains or changes a quality goal, read [`../review-prose/rubric.md`](../review-prose/rubric.md). Update that rubric when the goal is observable in a finished document; otherwise record why no rubric change is needed. Keep the rubric focused on reader outcomes rather than duplicating this skill's drafting process.
