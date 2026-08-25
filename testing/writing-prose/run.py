@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from datetime import UTC, datetime
@@ -21,11 +22,27 @@ SKILL = ROOT / "skills" / "writing-prose" / "SKILL.md"
 RUBRIC = ROOT / "skills" / "review-prose" / "rubric.md"
 RUNS = HERE / "runs"
 
+# Pinned below latest: promptfoo 0.121.x carries the fix for the circular-JSON
+# crash triggered by the AWS SDK's Bedrock client (promptfoo#7266, #8687/#8688).
+PROMPTFOO_VERSION = "0.121.20"
+
+
+def default_provider() -> str:
+    if os.environ.get("OPENROUTER_API_KEY"):
+        return "openrouter:openai/gpt-5.6-luna"
+    if os.environ.get("AWS_BEARER_TOKEN_BEDROCK") or os.environ.get("AWS_PROFILE") or os.environ.get("AWS_ACCESS_KEY_ID"):
+        return "bedrock:us.anthropic.claude-haiku-4-5-20251001-v1:0"
+    return "openai:gpt-4o-mini"
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Evaluate writing-prose with Promptfoo")
     parser.add_argument("cases", nargs="*", help="Case names, with or without .md; omit for all cases")
-    parser.add_argument("--provider", default="openai:gpt-4o-mini", help="Promptfoo provider (default: openai:gpt-4o-mini)")
+    parser.add_argument(
+        "--provider",
+        default=default_provider(),
+        help="Promptfoo provider (default: OPENROUTER_API_KEY > AWS credentials (Bedrock) > openai:gpt-4o-mini)",
+    )
     parser.add_argument("--name", help="Run name; default is a UTC timestamp")
     parser.add_argument("--dry-run", action="store_true", help="Write the generated config but do not invoke Promptfoo")
     return parser.parse_args()
@@ -97,14 +114,14 @@ def main() -> int:
         print(f"Generated configuration: {config_path}")
         return 0
 
-    command = ["npx", "promptfoo@latest", "eval", "-c", str(config_path), "-o", str(output_path)]
+    command = ["npx", f"promptfoo@{PROMPTFOO_VERSION}", "eval", "-c", str(config_path), "-o", str(output_path)]
     print("Running:", " ".join(command))
     result = subprocess.run(command, cwd=ROOT)
     if result.returncode:
         return result.returncode
     print(f"Results: {output_path}")
     print("Inspect automated outputs and grades with:")
-    print(f"  npx promptfoo@latest view --output {output_path}")
+    print(f"  npx promptfoo@{PROMPTFOO_VERSION} view --output {output_path}")
     print("Then create blinded human-review files with:")
     print(f"  python3 testing/writing-prose/prepare_review.py {run_dir}")
     return 0

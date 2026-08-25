@@ -5,6 +5,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { defaultProvider, PROMPTFOO_VERSION } from "./provider.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "..");
@@ -18,7 +19,7 @@ Run every tested skill, or only the named skill suites, in one reviewable run.
 Options: --provider <provider>  --name <name>  --dry-run  --help`);
 }
 function parse(argv) {
-  const options = { provider: process.env.OPENROUTER_API_KEY ? "openrouter:openai/gpt-5.6-luna" : "openai:gpt-4o-mini", dryRun: false, skills: [] };
+  const options = { provider: defaultProvider(), dryRun: false, skills: [] };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (arg === "--help") { usage(); process.exit(0); }
@@ -58,7 +59,11 @@ function main() {
         { label: "baseline", raw: "Produce the requested artifact. Use only the supplied source material.\n\n{{case}}" },
         { label: skill, raw: `Follow these skill instructions before producing the requested artifact. Use only the supplied source material.\n\nSKILL:\n${skillText}\n\nCASE:\n{{case}}` },
       ],
-      tests: cases.map((file) => ({ description: path.basename(file, ".md"), vars: { case: readFileSync(path.join(casesDir, file), "utf8") }, assert: [{ type: "llm-rubric", value: judge, provider: options.provider }] })),
+      // Provider goes on test.options, not the assertion: promptfoo resolves
+      // assertion.provider to a live SDK client in place, and a later eager
+      // JSON.stringify(assertion) call crashes on that client's circular
+      // internals for Bedrock (promptfoo evaluator's `invariant` message arg).
+      tests: cases.map((file) => ({ description: path.basename(file, ".md"), vars: { case: readFileSync(path.join(casesDir, file), "utf8") }, options: { provider: options.provider }, assert: [{ type: "llm-rubric", value: judge }] })),
     };
     const configPath = path.join(suiteDir, "promptfooconfig.json");
     writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
@@ -67,7 +72,7 @@ function main() {
       // A failed rubric assertion is a finding to review, not a harness failure.
       // Promptfoo exits non-zero when any assertion fails even after writing results.
       try {
-        execFileSync("npx", ["promptfoo@latest", "eval", "-c", configPath, "-o", path.join(suiteDir, "promptfoo-results.json")], { cwd: root, stdio: "inherit" });
+        execFileSync("npx", [`promptfoo@${PROMPTFOO_VERSION}`, "eval", "-c", configPath, "-o", path.join(suiteDir, "promptfoo-results.json")], { cwd: root, stdio: "inherit" });
       } catch (error) {
         const resultsPath = path.join(suiteDir, "promptfoo-results.json");
         if (!existsSync(resultsPath)) throw error;
@@ -76,7 +81,7 @@ function main() {
     }
   }
   console.log(`Run directory: ${runDir}`);
-  console.log(options.dryRun ? "Configuration generated." : `Inspect: npx promptfoo@latest view ${runDir}`);
+  console.log(options.dryRun ? "Configuration generated." : `Inspect: npx promptfoo@${PROMPTFOO_VERSION} view ${runDir}`);
   if (!options.dryRun) console.log(`Prepare blind review: node testing/prepare-all-review.mjs ${runDir}`);
 }
 try { main(); } catch (error) { console.error(error.message); process.exitCode = 1; }

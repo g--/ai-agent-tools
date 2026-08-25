@@ -5,6 +5,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { defaultProvider, PROMPTFOO_VERSION } from "../provider.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "../..");
@@ -19,7 +20,7 @@ function usage() {
 Run baseline and writing-prose variants through Promptfoo.
 
 Options:
-  --provider <provider>  Promptfoo provider (default: openai:gpt-4o-mini)
+  --provider <provider>  Promptfoo provider (default: OPENROUTER_API_KEY > AWS credentials (Bedrock) > openai:gpt-4o-mini)
   --name <name>          Run directory name (default: UTC timestamp)
   --dry-run              Generate configuration without calling Promptfoo
   --help                 Show this help
@@ -28,7 +29,7 @@ Options:
 
 function parseArgs(argv) {
   const options = {
-    provider: process.env.OPENROUTER_API_KEY ? "openrouter:openai/gpt-5.6-luna" : "openai:gpt-4o-mini",
+    provider: defaultProvider(),
     dryRun: false,
     cases: [],
   };
@@ -95,7 +96,12 @@ function main() {
     tests: selected.map((casePath) => ({
       description: path.basename(casePath, ".md"),
       vars: { case: readFileSync(casePath, "utf8"), skill },
-      assert: [{ type: "llm-rubric", value: judge, provider: options.provider }],
+      // Provider goes on test.options, not the assertion: promptfoo resolves
+      // assertion.provider to a live SDK client in place, and a later eager
+      // JSON.stringify(assertion) call crashes on that client's circular
+      // internals for Bedrock (promptfoo evaluator's `invariant` message arg).
+      options: { provider: options.provider },
+      assert: [{ type: "llm-rubric", value: judge }],
     })),
   };
   const configPath = path.join(runDir, "promptfooconfig.json");
@@ -108,7 +114,7 @@ function main() {
     console.log(`Generated configuration: ${configPath}`);
     return;
   }
-  const command = ["promptfoo@latest", "eval", "-c", configPath, "-o", outputPath];
+  const command = [`promptfoo@${PROMPTFOO_VERSION}`, "eval", "-c", configPath, "-o", outputPath];
   console.log(`Running: npx ${command.join(" ")}`);
   try {
     execFileSync("npx", command, { cwd: root, stdio: "inherit" });
@@ -120,14 +126,15 @@ function main() {
     } else {
       if (options.provider.startsWith("openai:") && !process.env.OPENAI_API_KEY) {
         console.error("\nPromptfoo's default OpenAI provider needs OPENAI_API_KEY.");
-        console.error("To use OpenRouter instead, set OPENROUTER_API_KEY and rerun, or pass e.g.");
-        console.error("  --provider openrouter:openai/gpt-4o-mini");
+        console.error("To use OpenRouter instead, set OPENROUTER_API_KEY and rerun.");
+        console.error("To use AWS Bedrock instead, authenticate with AWS (e.g. `aws sso login`) and rerun, or pass e.g.");
+        console.error("  --provider bedrock:us.anthropic.claude-haiku-4-5-20251001-v1:0");
       }
       throw error;
     }
   }
   console.log(`Results: ${outputPath}`);
-  console.log(`Inspect: npx promptfoo@latest view ${runDir}`);
+  console.log(`Inspect: npx promptfoo@${PROMPTFOO_VERSION} view ${runDir}`);
   console.log(`Prepare blinded review: node testing/writing-prose/prepare-review.mjs ${runDir}`);
 }
 

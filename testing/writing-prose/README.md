@@ -13,13 +13,19 @@ nvm use
 
 [`.nvmrc`](../../.nvmrc) pins Node.js 22.22.0, the minimum version required by the current Promptfoo release and supported by the repository's Node-based runner. The runner uses [Promptfoo](https://www.promptfoo.dev/), an open-source LLM evaluation harness, through `npx`; Node.js is the only runtime dependency.
 
-The default provider is `openai:gpt-4o-mini`, which requires `OPENAI_API_KEY`. To use OpenRouter, export its key before running the tests; the runner then defaults to OpenRouter:
+The runner pins `promptfoo@0.121.20` rather than `@latest`: earlier versions intermittently crash with "Converting circular structure to JSON" when the AWS SDK's Bedrock client leaks a circular reference into a result ([promptfoo#7266](https://github.com/promptfoo/promptfoo/issues/7266), [#8687](https://github.com/promptfoo/promptfoo/issues/8687)); 0.121.6+ carries the fix.
+
+The runner picks a default provider from whatever credentials are available, in this order:
+
+1. `openrouter:openai/gpt-5.6-luna`, if `OPENROUTER_API_KEY` is set.
+2. `bedrock:us.anthropic.claude-haiku-4-5-20251001-v1:0`, if AWS credentials are available (`AWS_BEARER_TOKEN_BEDROCK`, `AWS_PROFILE`, or `AWS_ACCESS_KEY_ID`) — e.g. after `aws sso login --profile <profile>`.
+3. `openai:gpt-4o-mini`, which requires `OPENAI_API_KEY`.
+
+Choose another provider and model with `--provider` when needed, e.g.:
 
 ```sh
-export OPENROUTER_API_KEY=<your-openrouter-key>
+node testing/writing-prose/run.mjs --provider bedrock:us.anthropic.claude-sonnet-5
 ```
-
-With `OPENROUTER_API_KEY` set, the runner defaults to `openrouter:openai/gpt-5.6-luna`. Choose another provider and model with `--provider` when needed.
 
 ## Run tests
 
@@ -48,7 +54,7 @@ node testing/writing-prose/run.mjs pr-ticket-context --dry-run
 After the runner finishes, inspect outputs and automated grades with the command it prints, or run:
 
 ```sh
-npx promptfoo@latest view \
+npx promptfoo@0.121.20 view \
   testing/writing-prose/runs/<run-name>
 ```
 
