@@ -26,14 +26,15 @@ The decisive boundary is **world state**: the facts, constraints, uncertainty, a
 
 Use the smallest structure that supports an accountable choice. A complete record normally proceeds in this order:
 
-1. **Decision** — the decision, owner, status, and effective date; use `Proposed`, `Accepted`, `Superseded`, or the repository's status vocabulary.
-2. **World state** — the decision-independent snapshot: facts, constraints, uncertainty, and stakes before options were evaluated.
-3. **Decision criteria** — the outcomes, principles, thresholds, or trade-offs by which options will be assessed. State weights or non-negotiable constraints when they materially determine the result.
-4. **Options considered** — each viable option, including maintaining the status quo where relevant. Describe what it would do before judging it.
-5. **Evaluation** — how each option meets or misses the stated criteria, including material benefits, costs, risks, reversibility, and dependencies.
-6. **Decision and rationale** — the selected option and the reasoning that connects the evaluation to it; explain the decisive trade-offs and rejected alternatives.
-7. **Consequences and follow-through** — expected effects, owners, implementation or communication actions, validation signals, review date or trigger, and conditions that would reopen the decision.
-8. **References** — links, evidence, meeting notes, tickets, and attributions that support the record without replacing its explanation.
+1. **Header** — document status (`Proposed`, `Accepted`, `Superseded`), date, author(s), etc.
+2. **Problem Statement** — What we're trying to solve. This should fall into the "above the fold" material so the reader can understand if they are in the right document.
+3. **World state** — the decision-independent snapshot: facts, constraints, uncertainty, and stakes before options were evaluated.
+4. **Decision criteria** — the outcomes, principles, thresholds, or trade-offs by which options will be assessed. State weights or non-negotiable constraints when they materially determine the result.
+5. **Options considered** — each viable option, including maintaining the status quo where relevant. Describe what it would do before judging it.
+6. **Evaluation** — how each option meets or misses the stated criteria, including material benefits, costs, risks, reversibility, and dependencies.
+7. **Decision and rationale** — the selected option and the reasoning that connects the evaluation to it; explain the decisive trade-offs and rejected alternatives.
+8. **Consequences and follow-through** — expected effects, owners, implementation or communication actions, validation signals, review date or trigger, and conditions that would reopen the decision.
+9. **References** — links, evidence, meeting notes, tickets, and attributions that support the record without replacing its explanation.
 
 Omit sections that carry no material content only when the local template permits it. Keep the world-state section separate even in a short record; it is the control that makes later reasoning auditable.
 
