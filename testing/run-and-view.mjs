@@ -4,6 +4,7 @@
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { PROMPTFOO_VERSION } from "./provider.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "..");
@@ -22,7 +23,7 @@ execFileSync("node", [path.join(here, "run-all.mjs"), "--name", runName, ...args
 });
 
 console.log(`Opening Promptfoo viewer for ${runDir}`);
-execFileSync("npx", ["promptfoo@latest", "view", runDir], {
+execFileSync("npx", [`promptfoo@${PROMPTFOO_VERSION}`, "view", runDir], {
   cwd: root,
   stdio: "inherit",
 });

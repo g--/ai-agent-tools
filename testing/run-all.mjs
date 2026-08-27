@@ -44,7 +44,7 @@ function main() {
   const runDir = path.join(here, "runs", options.name ?? stamp());
   if (existsSync(runDir)) throw new Error(`Run directory already exists: ${runDir}`);
   mkdirSync(runDir, { recursive: true });
-  const judge = `Act as the intended reader and a rigorous prose reviewer. Evaluate the candidate only against the supplied case and rubric. Quote concrete evidence.\n\nCASE:\n{{case}}\n\nRUBRIC:\n${rubric}`;
+  const buildJudge = (golden) => `Act as the intended reader and a rigorous prose reviewer. Evaluate the candidate only against the supplied case and rubric. Quote concrete evidence.\n\nCASE:\n{{case}}\n${golden ? `\nREFERENCE (hand-approved for this case; the candidate should meet or exceed this quality bar, though it need not match it exactly):\n${golden}\n` : ""}\nRUBRIC:\n${rubric}`;
 
   for (const skill of skills) {
     const casesDir = path.join(here, skill, "cases");
@@ -63,7 +63,11 @@ function main() {
       // assertion.provider to a live SDK client in place, and a later eager
       // JSON.stringify(assertion) call crashes on that client's circular
       // internals for Bedrock (promptfoo evaluator's `invariant` message arg).
-      tests: cases.map((file) => ({ description: path.basename(file, ".md"), vars: { case: readFileSync(path.join(casesDir, file), "utf8") }, options: { provider: options.provider }, assert: [{ type: "llm-rubric", value: judge }] })),
+      tests: cases.map((file) => {
+        const goldenPath = path.join(here, skill, "golden", file);
+        const golden = existsSync(goldenPath) ? readFileSync(goldenPath, "utf8") : null;
+        return { description: path.basename(file, ".md"), vars: { case: readFileSync(path.join(casesDir, file), "utf8") }, options: { provider: options.provider }, assert: [{ type: "llm-rubric", value: buildJudge(golden) }] };
+      }),
     };
     const configPath = path.join(suiteDir, "promptfooconfig.json");
     writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
