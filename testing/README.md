@@ -6,6 +6,18 @@ Run every focused-skill test suite in one Promptfoo run:
 node testing/run-all.mjs
 ```
 
+To create a unique UTC-named run and open its Promptfoo viewer when evaluation finishes:
+
+```sh
+node testing/run-and-view.mjs
+```
+
+Pass skill names to run only selected suites:
+
+```sh
+node testing/run-and-view.mjs writing-prose pull-request
+```
+
 Run only selected suites:
 
 ```sh

@@ -9,12 +9,15 @@ Apply this skill to any reader-facing written artifact, from a one-line commit m
 
 Write for the reader's **path**: the sequence of ideas they need to understand, decide, or do what the document asks. A clear path gives the point before its support, defines an unfamiliar term before relying on it, and makes every transition earned.
 
-Practice **earned brevity**: prefer the shortest form that preserves the reader's ability to understand and act. Remove words, sentences, sections, and links that do not earn their place; retain context that prevents a reader from needing to reconstruct the point elsewhere.
+Practice **earned brevity**: prefer the shortest form that preserves the reader's ability to understand and act. Remove words, sentences, sections, and links that do not earn their place; retain context that prevents a reader from needing to reconstruct the point with material from outside the document.
 
 ## Process
 
-1. **Establish the brief.** Identify the purpose, audience, medium (for example: commit message, pull request description, decision document, email, or documentation), desired reader action, required facts, constraints, and tone. Set an **information budget**: decide the level of detail this reader needs for this medium, then distinguish essential context from useful-but-optional detail and material that does not serve the purpose. Infer only what the request makes reliable; ask a focused question when an unknown would materially change the result.
-   
+1. **Establish the brief.** Identify the purpose, audience, medium (for example: commit message, pull request description, decision document, email, or documentation), desired reader action, required facts, constraints, and tone. Set an **information budget**: decide the minimum level of detail this reader needs for this medium, then distinguish essential context from useful-but-optional detail and material that does not serve the purpose. Infer only what the request makes reliable; ask a focused question when an unknown would materially change the result.
+
+Establish:
+- who the reader is, what kind of topic they are likely to be knowledgeable about.
+
    **Done when:** you can state what this reader should know, feel, decide, or do after reading, the necessary level of detail, and what the document will deliberately leave out.
 
 2. **Build the reader path.** Separate the message into:
@@ -23,6 +26,8 @@ Practice **earned brevity**: prefer the shortest form that preserves the reader'
    - evidence, reasoning, or practical detail;
    - the action, decision, or next step.
 
+   Include information not yet available.
+   Identify what information the reader likely already knows; what they likely are able to understand without it being explicitly said.
    Order information by the reader's need, not by the order in which it was discovered. Introduce unfamiliar terms before using them. State constraints and exceptions near the claim they qualify.
 
    **Done when:** each section prepares the reader for the next one without relying on unstated knowledge.
@@ -33,6 +38,8 @@ Practice **earned brevity**: prefer the shortest form that preserves the reader'
 
    Let words and sentence structure carry the meaning. Use formatting for semantic structure, not decoration or emphasis: headings mark genuine sections; emphasis is rare and reserved for a distinction prose cannot make clear on its own. Use a list only when readers need to consume a set of discrete, parallel items. Use a table only when readers need to compare compact values across consistent dimensions, inspect mathematical relationships, or look up structured data. Write connected reasoning as prose rather than converting it into lists or tables for visual organization. Use examples where an abstract instruction could be interpreted in more than one way. Match formality and vocabulary to the audience.
 
+   Heading titles are short and optimized for the reader "jumping to" a particular section.
+
    **Done when:** the title gives readers a strong expectation of the document's relevance, the above-the-fold content confirms or corrects that expectation, and a reader can scan the headings, first sentences, and calls to action and recover the document's argument.
 
 4. **Make uncertainty visible.** Verify factual claims when the task and available sources permit. For unavailable but necessary facts, use a concise placeholder such as `<launch date>`; label an estimate or assumption plainly. Link the first useful mention of durable external material when it helps readers verify a claim or continue learning.
@@ -41,7 +48,9 @@ Practice **earned brevity**: prefer the shortest form that preserves the reader'
 
    **Done when:** readers can distinguish facts, sources, assumptions, and missing information.
 
-5. **Edit in passes.** First check completeness and accuracy, then the reader path, then sentences and mechanics. Make an explicit brevity pass against the information budget: remove repetition, filler, throat-clearing, vague intensifiers, implementation detail the reader cannot use, and detail that does not change understanding, a decision, or an action. Preserve necessary context rather than shortening mechanically.
+5. **Revisit the Brief** See if any of the assumptions made in the brief need to be revisited. (Eg. adjust the level of detail, tighten the desired actions, etc.) Repeat all steps if needed.
+
+6. **Edit in passes.** First check completeness and accuracy, then the reader path, then sentences and mechanics. Make an explicit brevity pass against the information budget: remove repetition, filler, throat-clearing, vague intensifiers, implementation detail the reader does not need to understand the document, and detail that does not change understanding, a decision, or an action. Preserve necessary context rather than shortening mechanically.
 
    **Done when:** every remaining sentence advances the reader's path, the document includes the necessary level of detail and no more, and the prose is accurate, readable, and ready for its medium.
 
