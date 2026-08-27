@@ -7,9 +7,10 @@ Reusable Agent Skills for AI coding agents. This repository provides:
 - `commit-message` for Git history-facing commit subjects and bodies;
 - `pull-request` for self-contained, review-focused pull request descriptions;
 - `copy-editing` for improving an existing draft while preserving its intended meaning and material structure;
-- `review-prose` for evaluating a draft or comparing alternatives against a reader-outcome rubric.
+- `review-prose` for evaluating a draft or comparing alternatives against a reader-outcome rubric;
+- `decision-writing` for durable, auditable decision records and memos.
 
-The focused skills build on the prose-writing discipline while supplying Git- and review-specific guidance.
+The focused skills build on the prose-writing discipline while supplying artifact-specific guidance.
 
 ## Install
 
