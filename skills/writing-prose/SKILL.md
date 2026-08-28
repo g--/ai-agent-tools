@@ -1,73 +1,109 @@
 ---
 name: writing-prose
-description: Write, revise, or critique prose when clarity, reader comprehension, structure, tone, or concise communication matters—from commit messages and pull request descriptions to decision documents, documentation, announcements, emails, and explanations.
+description: Write, revise, or critique prose for human consumption.
 ---
 
 # Writing Prose
 
-Apply this skill to any reader-facing written artifact, from a one-line commit message to a multi-section decision document. Scale the process to the artifact: a commit message may need only a precise subject and essential context, while a pull request description or decision document needs a fuller reader path.
+Apply this skill to any written artifact indented for human consumption. Key information must be provided for this be effective, especially: audience, purpose, medium, context of consumption. Ask for missing information; if no responses are unavailable, clearly state assumptions made, use place holders and/or make best guesses marked as such so they can be addressed later.
 
-Write for the reader's **path**: the sequence of ideas they need to understand, decide, or do what the document asks. A clear path gives the point before its support, defines an unfamiliar term before relying on it, and makes every transition earned.
+Write for the reader's path: the sequence of ideas they need to understand, decide, or do what the document asks. A clear path gives the point before its support, defines an unfamiliar term before relying on it, and makes every transition earned.
 
-Practice **earned brevity**: prefer the shortest form that preserves the reader's ability to understand and act. Remove words, sentences, sections, and links that do not earn their place; retain context that prevents a reader from needing to reconstruct the point with material from outside the document.
+Practice brevity: prefer the shortest form that preserves the reader's ability to understand and act. Remove words, sentences, sections, and links that do not earn their place; retain context that prevents a reader from needing to reconstruct the point with material from outside the document.
 
 ## Process
 
-1. **Establish the brief.** Identify the purpose, audience, medium (for example: commit message, pull request description, decision document, email, or documentation), desired reader action, required facts, constraints, and tone. Set an **information budget**: decide the minimum level of detail this reader needs for this medium, then distinguish essential context from useful-but-optional detail and material that does not serve the purpose. Infer only what the request makes reliable; ask a focused question when an unknown would materially change the result.
+### Establish the brief
 
-Establish:
-- who the reader is, what kind of topic they are likely to be knowledgeable about.
+Identify:
 
-   **Done when:** you can state what this reader should know, feel, decide, or do after reading, the necessary level of detail, and what the document will deliberately leave out.
+* purpose
+* audience: who they are, what they need, what they likely already know.
+* medium: eg commit message, pull request description, decision document, email, or documentation)
+* context: eg. where and how the reader will encounter the prose
+* style: should be appropriate to the medium
+* tone: should be appropraite to the medium
+* structure: is there a required/expected/conventional structure?
+* document purpose: the one or two core ideas the reader must understand from reading this
+* required information to achieve purpose
+* information likely already been known by the majority of the audience?
+* information not yet available to us
+* information budget: minimum level of detail this topic and the reader needs
+* the references used
 
-2. **Build the reader path.** Separate the message into:
-   - the main point or request;
-   - the context needed to understand it;
-   - evidence, reasoning, or practical detail;
-   - the action, decision, or next step.
+Note the reader should not have to be familiar with or remember details from outside resources in order to understand this content: bring in just the necessary information into this document and cite it. For example instead of "the goal of TICKET-123" bring in the details about it that matter: the ticket itself can be citation, but not the content.
 
-   Include information not yet available.
-   Identify what information the reader likely already knows; what they likely are able to understand without it being explicitly said.
-   Order information by the reader's need, not by the order in which it was discovered. Introduce unfamiliar terms before using them. State constraints and exceptions near the claim they qualify.
+The minority of the audience may not be familiar some terms or concepts that are key to understanding the document; to keep the content accessible, identify them ahead of time and get ready outside references they can be referred to to help them.
 
-   **Done when:** each section prepares the reader for the next one without relying on unstated knowledge.
+Verify factual claims. Fill in missing details through research or asking. If there are still gaps, use placeholders or best guesses marking them clearly for follow up with double square brackets [[like this]].
 
-3. **Draft for clarity.** Make the title a strong first signal of the subject, audience, or task. In the opening sentence or paragraph—the content visible **above the fold**—confirm what the document covers and who it is for, so readers can quickly tell whether it is the document they need.
+External references that make it to the final should be expected to last longer than the document itself.
 
-   Put the important subject and action near the start of each sentence. Prefer concrete, familiar words and specific verbs. Use active voice when it identifies the actor or makes the action easier to follow. Give each paragraph one job, opened by its controlling point.
+   **Done when:** you can state who this reader is and what they will need to understand in order for the writing to achieve it purpose
 
-   Let words and sentence structure carry the meaning. Use formatting for semantic structure, not decoration or emphasis: headings mark genuine sections; emphasis is rare and reserved for a distinction prose cannot make clear on its own. Use a list only when readers need to consume a set of discrete, parallel items. Write connected reasoning and explanatory comparisons as prose rather than converting them into lists or text-heavy tables for visual organization. Reserve tables for compact, structured lookup data or mathematical relationships with short cells; do not use a table to hold paragraphs, option descriptions, or rationale. Use examples where an abstract instruction could be interpreted in more than one way. Match formality and vocabulary to the audience.
 
-   Heading titles are short and optimized for the reader "jumping to" a particular section.
+### Build the reader path
 
-   **Done when:** the title gives readers a strong expectation of the document's relevance, the above-the-fold content confirms or corrects that expectation, and a reader can scan the headings, first sentences, and calls to action and recover the document's argument.
+Construct an outline. The organization should be based on the reader's needs, not the order in which information was discovered. Important points should come first as people tend to remember only the first thing. Sections should help the reader to navigate the document with minimal effort.
 
-4. **Make uncertainty visible.** Verify factual claims when the task and available sources permit. For unavailable but necessary facts, use a concise placeholder such as `<launch date>`; label an estimate or assumption plainly. Link the first useful mention of durable external material when it helps readers verify a claim or continue learning.
+Build the reader's knowledge incrementally and avoid jumping between topics. Plan out when to introduce concepts, terms and abbreviations.
 
-   A link supplements the document; it does not carry understanding the intended reader needs before continuing.
+Consider the structure:
 
-   **Done when:** readers can distinguish facts, sources, assumptions, and missing information.
+* Title: concise signal about the contents: allow the reader to determine if they need to look at this document.
+* "above the fold": as quickly as possible allow the reader to determine if why they need to read the rest of the document. This could be done by communicating enough that they know if they found the document they were looking for. This should be within the first paragraph, if not by the title or first sentence alone.
+* the context needed to understand it;
+* evidence, reasoning, or practical detail;
+* the action, decision, or next step.
+* references / further reading
 
-5. **Revisit the Brief** See if any of the assumptions made in the brief need to be revisited. (Eg. adjust the level of detail, tighten the desired actions, etc.) Repeat all steps if needed.
+Adapt the structure to fit the material and brief and use the smallest structure that fits: a single sentence may be sufficient.
 
-6. **Edit in passes.** First check completeness and accuracy, then the reader path, then sentences and mechanics. Make an explicit brevity pass against the information budget: remove repetition, filler, throat-clearing, vague intensifiers, implementation detail the reader does not need to understand the document, and detail that does not change understanding, a decision, or an action. Preserve necessary context rather than shortening mechanically.
+Revisit writing the brief if necessary (eg. if more missing information has been identified, or the purpose isn't clear)
 
-   **Done when:** every remaining sentence advances the reader's path, the document includes the necessary level of detail and no more, and the prose is accurate, readable, and ready for its medium.
+State constraints and exceptions near the claim they qualify.
 
-## General guidelines
+If something is discovered that pulls into question the details of the brief, go back to that step.
 
-- Lead with the conclusion, request, or decision when readers need it quickly; follow with the reason and detail.
-- Prefer one main idea per sentence and one controlling idea per paragraph.
-- Name the actor, action, owner, deadline, and condition when they matter. Replace ambiguous references such as “this,” “it,” or “they” with a noun when the referent is not immediate.
-- Treat identifiers as references, not explanations. In a pull request description, state the user or system outcome, the material change, and notable constraints before or alongside a ticket link. State the larger initiative or problem that makes the work necessary; “part of #123” does not explain why the work exists. “Completes #123” is useful metadata after readers know what #123 required; it is not a summary.
-- Use parallel grammar for parallel ideas. Keep modifiers beside the words they modify.
-- Choose precise quantities, dates, and examples over broad claims when precision helps the reader act or assess a claim.
-- Use qualifiers only when they change the meaning. State an exception directly instead of hiding it in a long sentence.
-- Keep terminology consistent. Define specialized terms for readers who need them, then use the defined term consistently.
-- Prefer short paragraphs, but vary sentence length naturally. Concision is removing wasted work for the reader, not merely reducing word count.
-- Set detail by consequence: include a fact when it changes the reader's understanding, decision, action, or ability to trust the document. Omit background, implementation detail, alternatives, and edge cases that do none of those things; link durable optional detail when readers may need it later.
-- Use the smallest structure that fits the message: a precise commit subject instead of a paragraph; a few headings instead of a long unbroken narrative; no heading where a single sentence is sufficient.
-- Read the draft as its intended reader: look for questions they would ask, assumptions they may not share, and actions they could misread.
+**Done when:** each section prepares the reader for the next one without relying on unstated knowledge.
+
+### Draft
+
+Use the outline to create a first draft, keeping in mind the key parts of the brief.
+
+
+* Show, don't tell, the reader. For example don't tell the reader in the opening paragraph "this document is for ____ who need to ____", instead tell them what's in the document and let them determine if it's for them. Another example, instead of a glossary, introduce a concept or acronym on first use: "The British Broadcasting System (BBC) is ..".
+* When providing external resources to help the minority of readers understand key concepts, provide a hyperlink to the resource on first use instead of disrupting the flow for the majority of readers.
+* Put the important subject and action near the start of each sentence.
+* Prefer concrete, familiar words and specific verbs.
+* Use active voice when it identifies the actor or makes the action easier to follow.
+* Give each paragraph one job, opened by its controlling point.
+* Formatting: let words and sentence structure carry the meaning. Use formatting for semantic structure, not decoration or emphasis.
+* Tables: only for comparisons, math, or data. Cells should are restricted to 1-3 short words or value.
+* Lists: actually lists. If it's more than one line each, consider paragraphs instead.
+* Titles: keep them short
+* Prefer one main idea per sentence and one controlling idea per paragraph.
+* Prefer short paragraphs, but vary sentence length naturally. Concision is removing wasted work for the reader, not merely reducing word count.
+
+   **Done when:** The draft meets the requirement set in the brief, follows the planned structure, and follows restrictions given.
+
+### Revisit the Brief
+
+If something is discovered that pulls into question the details of the brief, go back to that step.
+
+
+### Edit in passes
+
+Edit in multiple passes with a focus on reader path.
+Read it through the eyes of the intended audience, but slightly more experienced. And again but less experienced (consider adding a few external links to concepts if that is likely to help).
+While editing, keep track of information assumed to be known by the reader, topic changes, flow between sentences, paragraphs and sections.
+Consider what can be taken out and still maintain the meaning.
+Consider if there is more detail than is needed for the central purpose.
+
+Are topics touched on in more than one place? Is it necessary or are things clearer combined?
+
+   **Done when:** at least two passes have been made and the last one hasn't identified problems.
+
 
 ## Deliverable
 
