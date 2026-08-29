@@ -42,11 +42,11 @@ Omit sections that carry no material content only when the local template permit
 
 ## Draft with epistemic boundaries
 
-Lead with the decision and status so current participants can act. Then preserve the world state in neutral, time-bounded language: “As of <date>, …”; “The service handles …”; “The forecast is …”. Attribute sources and confidence where readers need to assess reliability.
+Open with the record's status and the problem to resolve so current participants can orient themselves. Place the selected decision or recommendation where the document's status, audience, and local convention make it most useful. Then preserve the world state in neutral, time-bounded language: “As of <date>, …”; “The service handles …”; “The forecast is …”. Attribute sources and confidence where readers need to assess reliability.
 
 Use distinct labels for facts, assumptions, estimates, preferences, forecasts, and decisions. Do not recast a forecast as an observed fact or a chosen goal as an external constraint. Include disagreement when it materially affects confidence, risk, or the available options.
 
-Describe options symmetrically. Give each viable option its mechanism, scope, and material consequences; do not make the preferred option concrete while leaving alternatives as labels. State why an option was rejected only after applying the criteria. A table may compare truly parallel options against the same compact criteria; use prose for causal reasoning, caveats, and trade-offs.
+Describe options symmetrically. Give each viable option its mechanism, scope, and material consequences; do not make the preferred option concrete while leaving alternatives as labels. State why an option was rejected only after applying the criteria. A table may compare truly parallel options only when it contains compact values, labels, or very short phrases against the same criteria; use prose for causal reasoning, caveats, trade-offs, and option descriptions.
 
 Refer to code, architecture, vendors, functions, or other implementation details only when they are decision inputs or consequences a future reader cannot otherwise recover. The record explains the choice, not a line-by-line implementation history.
 

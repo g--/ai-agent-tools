@@ -7,9 +7,9 @@ description: Write, revise, or critique prose for human consumption.
 
 Apply this skill to any written artifact intended for human consumption. Key information must be provided for this to be effective, especially: audience, purpose, medium, and context of consumption. Ask focused questions to fill in missing information, especially around the document’s purpose, audience fit, claim, recommendation, or required action. Otherwise, draft using clearly labelled assumptions or placeholders.
 
-Write for the reader's path: give this reader what they need, in the order and form they need it, to do what the document is for.
+Write for the reader's path: give this reader what they need, in the order and form they need it, to do what the document is for. Derive the document's order, detail, language, tone, and form from its purpose, audience, medium, and context rather than applying a fixed style.
 
-Practice brevity: prefer the shortest form that preserves the reader's ability to understand and act. Remove words, sentences, sections, and links that do not earn their place; retain context that prevents a reader from needing to reconstruct the point with material from outside the document.
+Practice brevity: prefer the shortest form that preserves the reader's ability to understand and act. Remove words, sentences, sections, and links that do not earn their place; retain context, uncertainty, and qualification when their absence would force the reader to make an unreliable inference.
 
 ## Process
 
@@ -28,7 +28,10 @@ Identify:
 * required information to achieve purpose
 * information likely already known by the majority of the audience
 * information not yet available to us
-* information budget: minimum level of detail this topic and the reader needs
+* reader task: what the reader must understand, decide, feel, or do
+* reading conditions: whether they are scanning, investigating, learning, comparing alternatives, acting under time pressure, or returning later
+* consequence of misunderstanding: what could go wrong if a reader misses a condition, lacks context, or draws an unsafe inference
+* information budget: the minimum detail needed for this reader to understand, decide, act, or safely rely on the document in this context
 * references supporting key information
 
 Note the reader should not have to be familiar with or remember details from outside resources in order to understand this content: bring in just the necessary information into this document and cite it. For example instead of "the goal of TICKET-123" bring in the details about it that matter: the ticket itself can be citation, but not the content.
@@ -94,15 +97,13 @@ Use a table only for compact structured data, lookup, or mathematical relationsh
 
 ### Edit in passes
 
-Edit in multiple passes with a focus on reader path.
-Read it through the eyes of the intended audience, but slightly more experienced. And again but less experienced (consider adding a few external links to concepts if that is likely to help).
-While editing, keep track of information assumed to be known by the reader, topic changes, flow between sentences, paragraphs and sections.
-Consider what can be taken out and still maintain the meaning.
-Consider if there is more detail than is needed for the central purpose.
+Edit in multiple passes with a focus on reader path. Read it through the eyes of the intended audience, then consider both a slightly more experienced and a slightly less experienced reader when that difference could change what the document needs. Add explanation, an example, or a durable external link only where it helps the intended reader use the document.
 
-Are topics touched on in more than one place? Is it necessary or are things clearer combined?
+For each passage, ask whether the reader has the information and framing needed to fulfil the document's purpose in its actual reading context. Remove detail that does not serve that purpose; restore detail whose absence would force unsafe, costly, or unreliable inference. Check information assumed to be known by the reader, topic changes, and flow between sentences, paragraphs, and sections.
 
-   **Done when:** at least two passes have been made and the last one hasn't identified problems.
+Check whether topics appear in more than one place. Retain the repetition only when the reader encounters the document in a way that needs it; otherwise combine the material.
+
+**Done when:** at least two passes have been made, the last pass found no material problem, and the document is clear for its intended function rather than merely concise or smooth.
 
 
 ## Deliverable
