@@ -6,6 +6,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { defaultProvider, PROMPTFOO_VERSION } from "../provider.mjs";
+import { candidateCase } from "../case.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "../..");
@@ -85,24 +86,27 @@ function main() {
 
   const skill = readFileSync(skillPath, "utf8");
   const rubric = readFileSync(rubricPath, "utf8");
-  const judge = `Act as the intended reader and a rigorous prose reviewer. Evaluate the candidate only against the supplied case and rubric. Do not reward a candidate for merely claiming to follow the rubric. Quote concrete evidence in the explanation.\n\nCASE:\n{{case}}\n\nRUBRIC:\n${rubric}`;
+  const judge = `Act as the intended reader and a rigorous prose reviewer. Evaluate the candidate only against the supplied case and rubric. Do not reward a candidate for merely claiming to follow the rubric. Quote concrete evidence in the explanation.\n\nCASE:\n{{fullCase}}\n\nRUBRIC:\n${rubric}`;
   const config = {
     description: "Blinded comparison of baseline and writing-prose",
     providers: [options.provider],
     prompts: [
-      { label: "baseline", raw: "Produce the requested artifact. Use only the supplied source material.\n\n{{case}}" },
-      { label: "writing-prose", raw: "Follow these skill instructions before producing the requested artifact. Use only the supplied source material.\n\nSKILL:\n{{skill}}\n\nCASE:\n{{case}}" },
+      { label: "baseline", raw: "Use only the supplied source material. Return exactly these three labeled sections and no other commentary:\n\n## Writing brief\nState the audience, purpose, medium, context of consumption, reader task, information budget, and any material assumptions or unknowns.\n\n## Outline\nShow the proposed reader path and structure.\n\n## Finished artifact\nProvide the requested artifact only; do not narrate how it satisfies the task.\n\nCASE:\n{{case}}" },
+      { label: "writing-prose", raw: "Use the writing-prose skill to complete this task. The skill is loaded below. Use only the supplied source material. Return exactly these three labeled sections and no other commentary:\n\n## Writing brief\nState the audience, purpose, medium, context of consumption, reader task, information budget, and any material assumptions or unknowns.\n\n## Outline\nShow the proposed reader path and structure.\n\n## Finished artifact\nProvide the requested artifact only; do not narrate how it satisfies the task.\n\nSKILL:\n{{skill}}\n\nCASE:\n{{case}}" },
     ],
-    tests: selected.map((casePath) => ({
-      description: path.basename(casePath, ".md"),
-      vars: { case: readFileSync(casePath, "utf8"), skill },
-      // Provider goes on test.options, not the assertion: promptfoo resolves
-      // assertion.provider to a live SDK client in place, and a later eager
-      // JSON.stringify(assertion) call crashes on that client's circular
-      // internals for Bedrock (promptfoo evaluator's `invariant` message arg).
-      options: { provider: options.provider },
-      assert: [{ type: "llm-rubric", value: judge }],
-    })),
+    tests: selected.map((casePath) => {
+      const fullCase = readFileSync(casePath, "utf8");
+      return {
+        description: path.basename(casePath, ".md"),
+        vars: { case: candidateCase(fullCase), fullCase, skill },
+        // Provider goes on test.options, not the assertion: promptfoo resolves
+        // assertion.provider to a live SDK client in place, and a later eager
+        // JSON.stringify(assertion) call crashes on that client's circular
+        // internals for Bedrock (promptfoo evaluator's `invariant` message arg).
+        options: { provider: options.provider },
+        assert: [{ type: "llm-rubric", value: judge }],
+      };
+    }),
   };
   const configPath = path.join(runDir, "promptfooconfig.json");
   const outputPath = path.join(runDir, "promptfoo-results.json");

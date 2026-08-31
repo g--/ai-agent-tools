@@ -2,15 +2,15 @@
 
 ## Intended artifact
 
-A decision record for the owners and shift leads of a small bakery chain, deciding how a new second location will order flour from their wholesale supplier. Some readers were not part of the original conversation with the supplier.
+A decision record for the owners and shift leads of a small bakery chain, deciding how a new second location will order flour from their wholesale supplier. Some readers were not part of the original conversation with the supplier. And decision makes in the future looking to set up a new bakery or modify the existing setup.
 
 ## Task
 
-Write the decision record. Use whatever headings best serve a reader who wants to understand the problem, the options, and what was decided — you do not need to follow the order the source material presents them in.
+Write the decision record.
 
 ## Source material
 
-The material below is written the way the owner who called the supplier first explained it to the team — as a chain of "first this, then this" reasoning. Reorganize it as needed; don't mirror its structure or its exact wording.
+The material below is written the way the owner who called the supplier first explained it to the team: as a chain of “first this, then this” reasoning.
 
 ### Why we order flour the way we do
 

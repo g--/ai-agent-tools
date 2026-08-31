@@ -66,6 +66,7 @@ Other considerations:
 
 * Lead with the conclusion when immediate orientation helps; begin with context, evidence, experience, or uncertainty when that is necessary for the conclusion to be understood responsibly.
 * Put important information up top if some readers are unlikely to need more than that.
+* Is there enough material to carry each section? If not, would they be better served with fewer?
 
 Revisit the brief if necessary, for example when new information is missing, the purpose is unclear, or a discovery calls its assumptions into question.
 
@@ -84,6 +85,8 @@ Write the content that orients, informs, reassures, or directs the reader; do no
 Introduce a concept or acronym where it first becomes useful instead of requiring a separate glossary. When durable external material helps some readers understand a key concept, link it at its first useful mention without disrupting the main path for other readers.
 
 Treat qualification as a rhetorical choice. Use it to express warranted uncertainty, scope, evidence, responsibility, or stance; remove it when it only blurs a claim without helping the reader judge or act on it.
+
+The output should fit the medium: if an outline restricts the ability to write prose that flows and fits with the medium, re-evaluate. (Eg. if the outline is suggesting 6 paragraphs but each paragraph only needs a sentence, then combining them would likely help them flow better.)
 
 #### Formatting
 
@@ -112,4 +115,4 @@ Unless the request asks for critique only, provide the finished prose. When usef
 
 ## Maintenance
 
-When this skill gains or changes a quality goal, read [`../review-prose/rubric.md`](../review-prose/rubric.md). Update that rubric when the goal is observable in a finished document; otherwise record why no rubric change is needed. Keep the rubric focused on reader outcomes rather than duplicating this skill's drafting process.
+`SPEC.md` is the maintainer-facing behavioral contract for this skill; it is not ordinary runtime reading. When this skill gains or changes a quality goal, update `SPEC.md`, read [`../review-prose/rubric.md`](../review-prose/rubric.md), and update that rubric when the goal is observable in a finished document. Add or revise a case under `../../testing/writing-prose/cases/` that exposes the change. Keep the rubric focused on reader outcomes rather than duplicating this skill's drafting process.

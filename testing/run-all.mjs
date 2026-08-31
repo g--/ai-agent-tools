@@ -6,6 +6,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { defaultProvider, PROMPTFOO_VERSION } from "./provider.mjs";
+import { candidateCase } from "./case.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "..");
@@ -44,7 +45,7 @@ function main() {
   const runDir = path.join(here, "runs", options.name ?? stamp());
   if (existsSync(runDir)) throw new Error(`Run directory already exists: ${runDir}`);
   mkdirSync(runDir, { recursive: true });
-  const buildJudge = (golden) => `Act as the intended reader and a rigorous prose reviewer. Evaluate the candidate only against the supplied case and rubric. Quote concrete evidence.\n\nCASE:\n{{case}}\n${golden ? `\nREFERENCE (hand-approved for this case; the candidate should meet or exceed this quality bar, though it need not match it exactly):\n${golden}\n` : ""}\nRUBRIC:\n${rubric}`;
+  const buildJudge = (golden) => `Act as the intended reader and a rigorous prose reviewer. Evaluate the candidate only against the supplied case and rubric. Quote concrete evidence.\n\nCASE:\n{{fullCase}}\n${golden ? `\nREFERENCE (hand-approved for this case; the candidate should meet or exceed this quality bar, though it need not match it exactly):\n${golden}\n` : ""}\nRUBRIC:\n${rubric}`;
 
   for (const skill of skills) {
     const casesDir = path.join(here, skill, "cases");
@@ -56,8 +57,8 @@ function main() {
       description: `Blinded comparison of baseline and ${skill}`,
       providers: [options.provider],
       prompts: [
-        { label: "baseline", raw: "Produce the requested artifact. Use only the supplied source material.\n\n{{case}}" },
-        { label: skill, raw: `Follow these skill instructions before producing the requested artifact. Use only the supplied source material.\n\nSKILL:\n${skillText}\n\nCASE:\n{{case}}` },
+        { label: "baseline", raw: "Produce only the finished requested artifact. Use only the supplied source material.\n\nCASE:\n{{case}}" },
+        { label: skill, raw: `Use the ${skill} skill to complete this task. The skill is loaded below. Produce only the finished requested artifact. Use only the supplied source material.\n\nSKILL:\n${skillText}\n\nCASE:\n{{case}}` },
       ],
       // Provider goes on test.options, not the assertion: promptfoo resolves
       // assertion.provider to a live SDK client in place, and a later eager
@@ -66,7 +67,8 @@ function main() {
       tests: cases.map((file) => {
         const goldenPath = path.join(here, skill, "golden", file);
         const golden = existsSync(goldenPath) ? readFileSync(goldenPath, "utf8") : null;
-        return { description: path.basename(file, ".md"), vars: { case: readFileSync(path.join(casesDir, file), "utf8") }, options: { provider: options.provider }, assert: [{ type: "llm-rubric", value: buildJudge(golden) }] };
+        const fullCase = readFileSync(path.join(casesDir, file), "utf8");
+        return { description: path.basename(file, ".md"), vars: { case: candidateCase(fullCase), fullCase }, options: { provider: options.provider }, assert: [{ type: "llm-rubric", value: buildJudge(golden) }] };
       }),
     };
     const configPath = path.join(suiteDir, "promptfooconfig.json");

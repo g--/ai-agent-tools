@@ -1,6 +1,6 @@
 # Writing Prose Tests
 
-This directory tests whether `writing-prose` improves finished prose for its intended reader. It contains test cases, a runnable Promptfoo configuration, and a blinded human-review workflow. Test infrastructure stays outside `skills/`: skills are installable agent instructions, while tests are repository-maintenance tooling.
+This directory tests whether `writing-prose` improves finished prose for its intended reader. Its behavioral contract and examples live under [`../../skills/writing-prose/`](../../skills/writing-prose/); testing holds runnable cases and the evaluation harness. Test infrastructure stays outside `skills/`: skills are installable agent instructions, while tests are repository-maintenance tooling.
 
 ## Prerequisites
 
