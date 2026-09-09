@@ -1,4 +1,8 @@
-# Case: PR description without ticket dependence
+# Case: preference-migration review context
+
+## Test purpose
+
+Test whether the skill produces a self-contained PR description from source material that includes a ticket reference, without using the ticket as a substitute for the change's purpose, scope, or rollout context.
 
 ## Intended artifact
 
@@ -16,6 +20,6 @@ This pull request adds the `customer_preferences` table, migrates existing JSON 
 
 The linked ticket is #4821.
 
-## Completion criteria
+## Evaluation criteria
 
 A reviewer can understand why the change exists, what this pull request changes, the important rollout constraint, and how #4821 relates to the work without opening the ticket.

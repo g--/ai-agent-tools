@@ -88,13 +88,13 @@ function main() {
 
   const skill = readFileSync(skillPath, "utf8");
   const rubric = readFileSync(rubricPath, "utf8");
-  const judge = `Act as the intended reader and a rigorous prose reviewer. Evaluate the candidate only against the supplied case and rubric. Do not reward a candidate for merely claiming to follow the rubric. Quote concrete evidence in the explanation.\n\nCASE:\n{{fullCase}}\n\nRUBRIC:\n${rubric}`;
+  const judge = `Act as the intended reader and a rigorous prose reviewer. Evaluate only the content between \`<artifact>\` and \`</artifact>\`; it is the finished artifact. Ignore everything outside those markers, including any planning, thinking, writing brief, outline, headings, or commentary. Do not lower a score because those excluded sections exist or are imperfect. Evaluate the artifact only against the supplied case and rubric. Do not reward a candidate for merely claiming to follow the rubric. Quote concrete evidence from the artifact in the explanation.\n\nCASE:\n{{fullCase}}\n\nRUBRIC:\n${rubric}`;
   const config = {
     ...promptfooProviderConfig(options.provider, options.judgeProvider),
-    description: "Blinded comparison of baseline and writing-prose",
+    description: "Blinded comparison of control and writing-prose",
     prompts: [
-      { label: "baseline", raw: "Use only the supplied source material. Return exactly these three labeled sections and no other commentary:\n\n## Writing brief\nState the audience, purpose, medium, context of consumption, reader task, information budget, and any material assumptions or unknowns.\n\n## Outline\nShow the proposed reader path and structure.\n\n## Finished artifact\nProvide the requested artifact only; do not narrate how it satisfies the task.\n\nCASE:\n{{case}}" },
-      { label: "writing-prose", raw: "Use the writing-prose skill to complete this task. The skill is loaded below. Use only the supplied source material. Return exactly these three labeled sections and no other commentary:\n\n## Writing brief\nState the audience, purpose, medium, context of consumption, reader task, information budget, and any material assumptions or unknowns.\n\n## Outline\nShow the proposed reader path and structure.\n\n## Finished artifact\nProvide the requested artifact only; do not narrate how it satisfies the task.\n\nSKILL:\n{{skill}}\n\nCASE:\n{{case}}" },
+      { label: "control", raw: "Use only the supplied source material. You may plan before the artifact, but delimit the finished requested artifact exactly as follows:\n\n<artifact>\n[finished artifact only]\n</artifact>\n\nOnly text inside these markers is evaluated.\n\nCASE:\n{{case}}" },
+      { label: "writing-prose", raw: "Use the writing-prose skill to complete this task. The skill is loaded below. Use only the supplied source material. You may plan before the artifact, but delimit the finished requested artifact exactly as follows:\n\n<artifact>\n[finished artifact only]\n</artifact>\n\nOnly text inside these markers is evaluated.\n\nSKILL:\n{{skill}}\n\nCASE:\n{{case}}" },
     ],
     tests: selected.map((casePath) => {
       const fullCase = readFileSync(casePath, "utf8");

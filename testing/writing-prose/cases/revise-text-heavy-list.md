@@ -1,5 +1,9 @@
 # Case: revise a storage-migration description
 
+## Test purpose
+
+Test whether the skill turns paragraph-length list items containing connected migration reasoning into readable prose without dropping scope, rollback, or deployment facts.
+
 ## Intended artifact
 
 A short pull request description for engineers reviewing a storage migration.

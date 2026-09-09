@@ -48,7 +48,7 @@ function main() {
   const runDir = path.join(here, "runs", options.name ?? stamp());
   if (existsSync(runDir)) throw new Error(`Run directory already exists: ${runDir}`);
   mkdirSync(runDir, { recursive: true });
-  const buildJudge = (golden) => `Act as the intended reader and a rigorous prose reviewer. Evaluate the candidate only against the supplied case and rubric. Quote concrete evidence.\n\nCASE:\n{{fullCase}}\n${golden ? `\nREFERENCE (hand-approved for this case; the candidate should meet or exceed this quality bar, though it need not match it exactly):\n${golden}\n` : ""}\nRUBRIC:\n${rubric}`;
+  const buildJudge = (golden) => `Act as the intended reader and a rigorous prose reviewer. Evaluate only the content between \`<artifact>\` and \`</artifact>\`; it is the finished artifact. Ignore everything outside those markers, including any planning, thinking, headings, or commentary. Do not lower a score because those excluded sections exist or are imperfect. Quote evidence from the artifact.\n\nCASE:\n{{fullCase}}\n${golden ? `\nREFERENCE (hand-approved for this case; the artifact should meet or exceed this quality bar, though it need not match it exactly):\n${golden}\n` : ""}\nRUBRIC:\n${rubric}`;
 
   for (const skill of skills) {
     const casesDir = path.join(here, skill, "cases");
@@ -58,10 +58,10 @@ function main() {
     const skillText = readFileSync(path.join(skillsRoot, skill, "SKILL.md"), "utf8");
     const config = {
       ...promptfooProviderConfig(options.provider, options.judgeProvider),
-      description: `Blinded comparison of baseline and ${skill}`,
+      description: `Blinded comparison of control and ${skill}`,
       prompts: [
-        { label: "baseline", raw: "Produce only the finished requested artifact. Use only the supplied source material.\n\nCASE:\n{{case}}" },
-        { label: skill, raw: `Use the ${skill} skill to complete this task. The skill is loaded below. Produce only the finished requested artifact. Use only the supplied source material.\n\nSKILL:\n${skillText}\n\nCASE:\n{{case}}` },
+        { label: "control", raw: "Use only the supplied source material. You may plan before the artifact, but delimit the finished requested artifact exactly as follows:\n\n<artifact>\n[finished artifact only]\n</artifact>\n\nOnly text inside these markers is evaluated.\n\nCASE:\n{{case}}" },
+        { label: skill, raw: `Use the ${skill} skill to complete this task. The skill is loaded below. Use only the supplied source material. You may plan before the artifact, but delimit the finished requested artifact exactly as follows:\n\n<artifact>\n[finished artifact only]\n</artifact>\n\nOnly text inside these markers is evaluated.\n\nSKILL:\n${skillText}\n\nCASE:\n{{case}}` },
       ],
       tests: cases.map((file) => {
         const goldenPath = path.join(here, skill, "golden", file);

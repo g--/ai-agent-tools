@@ -1,5 +1,9 @@
 # Case: revise a scheduled-export announcement
 
+## Test purpose
+
+Test whether the skill revises prose that narrates its own audience and sections into an opening that directly orients and instructs readers while preserving supported facts.
+
 ## Intended artifact
 
 A concise customer email announcing scheduled CSV exports to eligible workspace administrators.

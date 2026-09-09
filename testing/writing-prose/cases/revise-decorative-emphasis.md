@@ -1,5 +1,9 @@
 # Case: revise a dependency-update announcement
 
+## Test purpose
+
+Test whether the skill removes decorative emphasis without making a required action, deadline, rationale, or support route harder to find.
+
 ## Intended artifact
 
 A short internal announcement for application teams.

@@ -1,5 +1,9 @@
 # Case: revise an upload incident update
 
+## Test purpose
+
+Test whether the skill corrects unsupported certainty in an incident update while preserving observed impact, recovery status, safe customer action, and material uncertainty.
+
 ## Intended artifact
 
 A customer-facing status-page update during an EU document-upload incident.

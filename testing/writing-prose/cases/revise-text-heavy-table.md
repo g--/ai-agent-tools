@@ -1,5 +1,9 @@
 # Case: revise a tenant-isolation comparison
 
+## Test purpose
+
+Test whether the skill removes paragraph-length option analysis from table cells while preserving an accurate, decision-useful comparison, estimates, and recommendation.
+
 ## Intended artifact
 
 A decision memo section for engineering leadership comparing two tenant-isolation approaches.

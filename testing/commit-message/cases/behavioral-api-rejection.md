@@ -1,4 +1,8 @@
-# Case: explain an intentional compatibility change
+# Case: API rejection changes checkout semantics
+
+## Test purpose
+
+Test whether the skill writes a behavior-focused, history-useful commit message from a diff and surrounding source material, including a body only when the client-safety rationale adds value.
 
 ## Intended artifact
 
@@ -6,7 +10,7 @@ A Git commit message that future engineers will read while investigating a clien
 
 ## Task
 
-Write a commit subject and include a body only if it earns its place.
+Write the commit message.
 
 ## Source material
 
@@ -33,7 +37,7 @@ index 81c438f..d1b39c7 100644
    }
  
 +  if (input.couponCode) return applyCoupon(input.couponCode);
-   if (input.giftCardCode) return applyGiftCard(input.giftCardCode);
++  if (input.giftCardCode) return applyGiftCard(input.giftCardCode);
    return noDiscount();
  }
 diff --git a/src/checkout/discounts.test.ts b/src/checkout/discounts.test.ts
@@ -54,6 +58,6 @@ index 3af2e31..edfd2aa 100644
  });
 ```
 
-## Completion criteria
+## Evaluation criteria
 
 The subject names the changed behavior rather than merely the implementation or ticket. Include a body if it preserves why rejecting the request is safer than the previous successful response. Do not invent a migration timeline or claim that clients have already been notified. The commit message must be supported by both the source material and diff.
