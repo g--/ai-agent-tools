@@ -17,10 +17,14 @@ const runDir = path.join(here, "runs", runName);
 const args = process.argv.slice(2);
 
 console.log(`Run name: ${runName}`);
-execFileSync("node", [path.join(here, "run-all.mjs"), "--name", runName, ...args], {
-  cwd: root,
-  stdio: "inherit",
-});
+try {
+  execFileSync("node", [path.join(here, "run-all.mjs"), "--name", runName, ...args], {
+    cwd: root,
+    stdio: "inherit",
+  });
+} catch (error) {
+  process.exit(error.status ?? 1);
+}
 
 console.log(`Opening Promptfoo viewer for ${runDir}`);
 execFileSync("npx", [`promptfoo@${PROMPTFOO_VERSION}`, "view", runDir], {

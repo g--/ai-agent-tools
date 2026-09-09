@@ -1,0 +1,25 @@
+# Copy this file to .envrc, select one backend and its native candidate and
+# judge model IDs, then run `direnv allow`. --provider overrides all three.
+export EVAL_PROVIDER=copilot
+export EVAL_MODEL=gpt-5.6-luna
+export JUDGE_MODEL=gpt-5.6-luna
+
+# GitHub Copilot CLI: run `gh copilot` once to install and authenticate.
+
+# OpenRouter example:
+# export EVAL_PROVIDER=openrouter
+# export EVAL_MODEL=openai/gpt-5.6-luna
+# export JUDGE_MODEL=openai/gpt-5.6-luna
+# export OPENROUTER_API_KEY=your-api-key
+
+# AWS Bedrock example. Prefer an authenticated profile over long-lived keys:
+# export EVAL_PROVIDER=bedrock
+# export EVAL_MODEL=us.anthropic.claude-haiku-4-5-20251001-v1:0
+# export JUDGE_MODEL=us.anthropic.claude-haiku-4-5-20251001-v1:0
+# export AWS_PROFILE=your-profile
+
+# OpenAI example:
+# export EVAL_PROVIDER=openai
+# export EVAL_MODEL=gpt-4o-mini
+# export JUDGE_MODEL=gpt-4o-mini
+# export OPENAI_API_KEY=your-api-key

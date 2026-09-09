@@ -1,9 +1,0 @@
-# `run.mjs` generates the complete configuration for selected cases and embeds
-# the installed writing-prose skill and review rubric. This file is retained as
-# a minimal Promptfoo example; use `mise exec -- node .../run.mjs` to test.
-description: writing-prose evaluation example
-providers:
-  - openai:gpt-4o-mini
-prompts:
-  - "Produce the requested artifact. Use only the supplied source material.\n\n{{case}}"
-tests: []

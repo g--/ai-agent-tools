@@ -5,7 +5,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
-import { defaultProvider, PROMPTFOO_VERSION } from "../provider.mjs";
+import { PROMPTFOO_VERSION, PROVIDER_HELP, promptfooProviderConfig, selectProviders, validateProvider } from "../provider.mjs";
 import { candidateCase } from "../case.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -21,7 +21,7 @@ function usage() {
 Run baseline and writing-prose variants through Promptfoo.
 
 Options:
-  --provider <provider>  Promptfoo provider (default: OPENROUTER_API_KEY > AWS credentials (Bedrock) > openai:gpt-4o-mini)
+  --provider <provider>  Promptfoo provider (default: ${PROVIDER_HELP})
   --name <name>          Run directory name (default: UTC timestamp)
   --dry-run              Generate configuration without calling Promptfoo
   --help                 Show this help
@@ -30,7 +30,7 @@ Options:
 
 function parseArgs(argv) {
   const options = {
-    provider: defaultProvider(),
+    provider: undefined,
     dryRun: false,
     cases: [],
   };
@@ -53,6 +53,7 @@ function parseArgs(argv) {
       options.cases.push(arg);
     }
   }
+  Object.assign(options, selectProviders(options.provider));
   return options;
 }
 
@@ -77,6 +78,7 @@ function timestamp() {
 
 function main() {
   const options = parseArgs(process.argv.slice(2));
+  if (!options.dryRun) validateProvider(options.provider);
   if (!existsSync(casesDir)) throw new Error(`Cases directory not found: ${casesDir}`);
   const selected = selectCases(options.cases);
   const runName = options.name ?? timestamp();
@@ -88,8 +90,8 @@ function main() {
   const rubric = readFileSync(rubricPath, "utf8");
   const judge = `Act as the intended reader and a rigorous prose reviewer. Evaluate the candidate only against the supplied case and rubric. Do not reward a candidate for merely claiming to follow the rubric. Quote concrete evidence in the explanation.\n\nCASE:\n{{fullCase}}\n\nRUBRIC:\n${rubric}`;
   const config = {
+    ...promptfooProviderConfig(options.provider, options.judgeProvider),
     description: "Blinded comparison of baseline and writing-prose",
-    providers: [options.provider],
     prompts: [
       { label: "baseline", raw: "Use only the supplied source material. Return exactly these three labeled sections and no other commentary:\n\n## Writing brief\nState the audience, purpose, medium, context of consumption, reader task, information budget, and any material assumptions or unknowns.\n\n## Outline\nShow the proposed reader path and structure.\n\n## Finished artifact\nProvide the requested artifact only; do not narrate how it satisfies the task.\n\nCASE:\n{{case}}" },
       { label: "writing-prose", raw: "Use the writing-prose skill to complete this task. The skill is loaded below. Use only the supplied source material. Return exactly these three labeled sections and no other commentary:\n\n## Writing brief\nState the audience, purpose, medium, context of consumption, reader task, information budget, and any material assumptions or unknowns.\n\n## Outline\nShow the proposed reader path and structure.\n\n## Finished artifact\nProvide the requested artifact only; do not narrate how it satisfies the task.\n\nSKILL:\n{{skill}}\n\nCASE:\n{{case}}" },
@@ -99,11 +101,6 @@ function main() {
       return {
         description: path.basename(casePath, ".md"),
         vars: { case: candidateCase(fullCase), fullCase, skill },
-        // Provider goes on test.options, not the assertion: promptfoo resolves
-        // assertion.provider to a live SDK client in place, and a later eager
-        // JSON.stringify(assertion) call crashes on that client's circular
-        // internals for Bedrock (promptfoo evaluator's `invariant` message arg).
-        options: { provider: options.provider },
         assert: [{ type: "llm-rubric", value: judge }],
       };
     }),
@@ -128,7 +125,7 @@ function main() {
     if (existsSync(outputPath)) {
       console.warn("Promptfoo recorded failing assertions; continuing so the results can be reviewed.");
     } else {
-      if (options.provider.startsWith("openai:") && !process.env.OPENAI_API_KEY) {
+      if (typeof options.provider === "string" && options.provider.startsWith("openai:") && !process.env.OPENAI_API_KEY) {
         console.error("\nPromptfoo's default OpenAI provider needs OPENAI_API_KEY.");
         console.error("To use OpenRouter instead, set OPENROUTER_API_KEY and rerun.");
         console.error("To use AWS Bedrock instead, authenticate with AWS (e.g. `aws sso login`) and rerun, or pass e.g.");

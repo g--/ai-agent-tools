@@ -5,7 +5,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
-import { defaultProvider, PROMPTFOO_VERSION } from "./provider.mjs";
+import { PROMPTFOO_VERSION, PROVIDER_HELP, promptfooProviderConfig, selectProviders, validateProvider } from "./provider.mjs";
 import { candidateCase } from "./case.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -17,10 +17,11 @@ function usage() {
   console.log(`Usage: node testing/run-all.mjs [options] [skill ...]
 
 Run every tested skill, or only the named skill suites, in one reviewable run.
-Options: --provider <provider>  --name <name>  --dry-run  --help`);
+Options: --provider <provider>  --name <name>  --dry-run  --help
+Provider default: ${PROVIDER_HELP}`);
 }
 function parse(argv) {
-  const options = { provider: defaultProvider(), dryRun: false, skills: [] };
+  const options = { provider: undefined, dryRun: false, skills: [] };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (arg === "--help") { usage(); process.exit(0); }
@@ -29,6 +30,7 @@ function parse(argv) {
     else if (arg.startsWith("-")) throw new Error(`Unknown option: ${arg}`);
     else options.skills.push(arg);
   }
+  Object.assign(options, selectProviders(options.provider));
   return options;
 }
 function availableSkills() {
@@ -39,6 +41,7 @@ function availableSkills() {
 function stamp() { return new Date().toISOString().replaceAll("-", "").replaceAll(":", "").replace(/\.\d{3}Z$/, "Z"); }
 function main() {
   const options = parse(process.argv.slice(2));
+  if (!options.dryRun) validateProvider(options.provider);
   const known = availableSkills();
   const skills = options.skills.length ? options.skills : known;
   for (const skill of skills) if (!known.includes(skill)) throw new Error(`Unknown tested skill '${skill}'. Available: ${known.join(", ")}`);
@@ -54,21 +57,17 @@ function main() {
     mkdirSync(suiteDir);
     const skillText = readFileSync(path.join(skillsRoot, skill, "SKILL.md"), "utf8");
     const config = {
+      ...promptfooProviderConfig(options.provider, options.judgeProvider),
       description: `Blinded comparison of baseline and ${skill}`,
-      providers: [options.provider],
       prompts: [
         { label: "baseline", raw: "Produce only the finished requested artifact. Use only the supplied source material.\n\nCASE:\n{{case}}" },
         { label: skill, raw: `Use the ${skill} skill to complete this task. The skill is loaded below. Produce only the finished requested artifact. Use only the supplied source material.\n\nSKILL:\n${skillText}\n\nCASE:\n{{case}}` },
       ],
-      // Provider goes on test.options, not the assertion: promptfoo resolves
-      // assertion.provider to a live SDK client in place, and a later eager
-      // JSON.stringify(assertion) call crashes on that client's circular
-      // internals for Bedrock (promptfoo evaluator's `invariant` message arg).
       tests: cases.map((file) => {
         const goldenPath = path.join(here, skill, "golden", file);
         const golden = existsSync(goldenPath) ? readFileSync(goldenPath, "utf8") : null;
         const fullCase = readFileSync(path.join(casesDir, file), "utf8");
-        return { description: path.basename(file, ".md"), vars: { case: candidateCase(fullCase), fullCase }, options: { provider: options.provider }, assert: [{ type: "llm-rubric", value: buildJudge(golden) }] };
+        return { description: path.basename(file, ".md"), vars: { case: candidateCase(fullCase), fullCase }, assert: [{ type: "llm-rubric", value: buildJudge(golden) }] };
       }),
     };
     const configPath = path.join(suiteDir, "promptfooconfig.json");

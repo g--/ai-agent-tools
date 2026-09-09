@@ -15,15 +15,15 @@ nvm use
 
 The runner pins `promptfoo@0.121.20` rather than `@latest`: earlier versions intermittently crash with "Converting circular structure to JSON" when the AWS SDK's Bedrock client leaks a circular reference into a result ([promptfoo#7266](https://github.com/promptfoo/promptfoo/issues/7266), [#8687](https://github.com/promptfoo/promptfoo/issues/8687)); 0.121.6+ carries the fix.
 
-The runner picks a default provider from whatever credentials are available, in this order:
+Provider and model selection is shared by all Node-based runners. Set `EVAL_PROVIDER` to `copilot`, `openrouter`, `bedrock`, or `openai`. Set `EVAL_MODEL` to the backend-native model that generates baseline and skill-assisted candidates, and `JUDGE_MODEL` to the model that grades them. Credential variables configure authentication but do not select a backend.
 
-1. `openrouter:openai/gpt-5.6-luna`, if `OPENROUTER_API_KEY` is set.
-2. `bedrock:us.anthropic.claude-haiku-4-5-20251001-v1:0`, if AWS credentials are available (`AWS_BEARER_TOKEN_BEDROCK`, `AWS_PROFILE`, or `AWS_ACCESS_KEY_ID`) — e.g. after `aws sso login --profile <profile>`.
-3. `openai:gpt-4o-mini`, which requires `OPENAI_API_KEY`.
+Model IDs differ by backend. For example, GPT-5.6 Luna is `gpt-5.6-luna` in Copilot and `openai/gpt-5.6-luna` in OpenRouter; Bedrock uses IDs such as `us.anthropic.claude-haiku-4-5-20251001-v1:0`. See [`.envrc.example`](../../.envrc.example) for complete examples.
 
-Choose another provider and model with `--provider` when needed, e.g.:
+Copilot uses the authenticated [GitHub Copilot CLI](https://docs.github.com/en/copilot/concepts/agents/about-copilot-cli); run `gh copilot` once to install or authenticate it. `--provider` overrides the environment and uses one provider/model for both roles; the `copilot` shorthand defaults to GPT-5.6 Luna:
 
 ```sh
+node testing/writing-prose/run.mjs --provider copilot
+node testing/writing-prose/run.mjs --provider copilot:gpt-5-mini
 node testing/writing-prose/run.mjs --provider bedrock:us.anthropic.claude-sonnet-5
 ```
 
@@ -46,8 +46,7 @@ node testing/writing-prose/run.mjs pr-ticket-context commit-message
 Select a Promptfoo provider or inspect the generated configuration without calling a model:
 
 ```sh
-OPENROUTER_API_KEY=<your-openrouter-key> \
-  node testing/writing-prose/run.mjs --provider openrouter:openai/gpt-5.6-luna
+node testing/writing-prose/run.mjs --provider copilot:gpt-5-mini
 node testing/writing-prose/run.mjs pr-ticket-context --dry-run
 ```
 
