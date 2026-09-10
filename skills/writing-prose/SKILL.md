@@ -13,7 +13,13 @@ Practice brevity: prefer the shortest form that preserves the reader's ability t
 
 ## Process
 
-### Establish the brief
+The process is described in terms of "Roles"; if available, use separate agents that communicate with each other for each role.
+
+### The Visionary
+
+The Visionary provides a brief that sets the goals and parameters for the
+output and defends them. Use the provided context as a starting point and the
+researcher to fill in the gaps.
 
 Identify:
 
@@ -26,28 +32,54 @@ Identify:
 * structure: is there a required/expected/conventional structure?
 * document purpose: the one or two core ideas the reader must understand from reading this
 * required information to achieve purpose
-* information likely already known by the majority of the audience
-* information not yet available to us
 * reader task: what the reader must understand, decide, feel, or do
 * reading conditions: whether they are scanning, investigating, learning, comparing alternatives, acting under time pressure, or returning later
 * consequence of misunderstanding: what could go wrong if a reader misses a condition, lacks context, or draws an unsafe inference
 * information budget: the minimum detail needed for this reader to understand, decide, act, or safely rely on the document in this context
-* references supporting key information
 
-Note the reader should not have to be familiar with or remember details from outside resources in order to understand this content: bring in just the necessary information into this document and cite it. For example instead of "the goal of TICKET-123" bring in the details about it that matter: the ticket itself can be citation, but not the content.
+### Researcher
+
+The researcher is an expert at collecting and managing information. It collect
+information from context given, searching external resources and asking humans
+(if available). It tracks the sources, estimates the reliability of the
+information, contributes "best guesses" or placeholders when information can't
+be found. It makes this available to other roles and does further research on
+request.
+
+When researching, it brings in the necessary information as a fact and cite the
+source. For example instead of saying "the goal of TICKET-123" it brings in the
+details about it that matter: the ticket itself can be citation, but not the
+content.
+
+Start by using the brief and provided context to research facts that may be
+needed to accomplish the goals.
+
+When 
+
+* information likely already known by the majority of the audience
+* information not yet available to us
+* references supporting key information
 
 Some of the audience may not be familiar with terms or concepts that are key to understanding the document; to keep the content accessible, identify them ahead of time and prepare references or footnotes they can consult.
 
-Verify factual claims. Fill in missing details through research or asking. If there are still gaps, use placeholders or best guesses marking them clearly for follow up with double square brackets [[like this]].
+Fill in missing details through research or asking. If there are still gaps, use placeholders or best guesses marking them clearly for follow up with double square brackets [[like this]].
 
 External references that make it to the final should be expected to last longer than the document itself.
 
-   **Done when:** you can state who this reader is and what they will need to understand in order for the writing to achieve its purpose
+### The logician 
+
+The logician knows how to construct both a logical and emotional sound
+argument. Given the brief, establish all the facts necessary to achieve the
+goal. The Research has facts available and you should ask it to find more as
+you need them.
 
 
-### Build the reader path
+### Structurer
 
-Construct an outline. The organization should be based on the reader's needs, not the order in which information was discovered. Sections should help the reader to navigate the document with minimal effort.
+The Structurer is responsible for the high level organization of the output. It
+starts by constructing an outline. The organization should be based on the
+reader's needs, not the order in which information was discovered. Sections
+should help the reader to navigate the document with minimal effort.
 
 Build the reader's knowledge incrementally and avoid jumping between topics. Plan out when to introduce concepts, terms and abbreviations.
 
@@ -68,13 +100,12 @@ Other considerations:
 * Put important information up top if some readers are unlikely to need more than that.
 * Is there enough material to carry each section? If not, would they be better served with fewer?
 
-Revisit the brief if necessary, for example when new information is missing, the purpose is unclear, or a discovery calls its assumptions into question.
+Be prepared to revisit the structure based on feedback from other Roles. But
+always come back to the brief and supporting the reader's path.
 
-**Done when:** each section prepares the reader for the next one without relying on unstated knowledge.
+### The Writer
 
-### Draft
-
-Use the outline to create a first draft, keeping in mind the key parts of the brief.
+Use input from the Structuer, logician and researching to write the document while keeping it grounded in the Brief. Engage with them if something doesn't work.
 
 #### Prose
 
@@ -96,22 +127,76 @@ Prefer prose for explanation, reasoning, narrative, qualifications, trade-offs, 
 
 Use a table only for compact structured data, lookup, or mathematical relationships. Table cells should normally be a value, label, or very short phrase. Move explanation, rationale, option descriptions, and multi-sentence content into prose. Keep titles as short as the medium and the reader’s need for orientation permit.
 
-**Done when:** the draft meets the requirements set in the brief, follows the planned structure, and respects the applicable restrictions.
-
-### Edit in passes
+## The Editors
 
 Edit in multiple passes with a focus on reader path. Read it through the eyes of the intended audience, then consider both a slightly more experienced and a slightly less experienced reader when that difference could change what the document needs. Add explanation, an example, or a durable external link only where it helps the intended reader use the document.
 
-For each passage, ask whether the reader has the information and framing needed to fulfil the document's purpose in its actual reading context. Remove detail that does not serve that purpose; restore detail whose absence would force unsafe, costly, or unreliable inference. Check information assumed to be known by the reader, topic changes, and flow between sentences, paragraphs, and sections.
+### The minimalist editor
+
+The minimalist looks at every concept, paragraph, sentence, and word and
+considers if the document retain the same meaning even if it was removed. It
+flags repetition. It especially likes to remove entire levels of details.
+Restore detail whose absence would force unsafe, costly, or unreliable
+inference.
+
+If the brief has too many goals and/or the resulting document is too big,
+consider pushing back and/or recommending the document be split into multiple.
+
+### The information accountant
+
+This editor is highly empathetic to the reader and understands we need to get
+them the information in the most efficient way possible which means so they
+expend the least effort possible to absorb it.
+
+As it reads the document, it tracks the information introduced and notes
+whether the reader is definitely familiar, likely familiar or likely unfamiliar
+with it, or definitely unfamiliar with it. Does the information require
+knowledge that was discussed recently in the document, or not recently: because
+it knows that jumping around makes it difficult to follow.
+
+Check information
+assumed to be known by the reader, topic changes, and flow between sentences,
+paragraphs, and sections.
+
+
+### The "But, Why?" editor
+
+This editor likes asking "why"? Especially "What is this about?", "Why is this
+important?", "How does this work?". It sometimes buts up against with the
+minimalist editor.
+
+Solving the "how does this work?" can be done by establishing the audience
+already knows the answer, providing a link on first usage if some of the
+audience won't know it, or providing a short description on first usage.
+
+### Correctness Editor
+
+This editor makes sure the content is appropriate for the medium. Appropriate
+structure, language, formatting.
+
+### Formatting
+
+Verifies the formatting appropriate for the medium and used appropriately.
+It is *very* suspicious of italics, bold, tables and lists; it pushes back on
+the writer to consider alternatives. Instead, it prefers prose carry
+explanation and emphasis; headings to mark real sections.
+
+
+### Level editor
+
+Edit in multiple passes with a focus on reader path. Read it through the eyes
+of the intended audience, then consider both a slightly more experienced and a
+slightly less experienced reader when that difference could change what the
+document needs. Add explanation, an example, or a durable external link only
+where it helps the intended reader use the document.
+
+For each passage, ask whether the reader has the information and framing needed to fulfil the document's purpose in its actual reading context.
 
 Check whether topics appear in more than one place. Retain the repetition only when the reader encounters the document in a way that needs it; otherwise combine the material.
 
-**Done when:** at least two passes have been made, the last pass found no material problem, and the document is clear for its intended function rather than merely concise or smooth.
-
-
 ## Deliverable
 
-Unless the request asks for critique only, provide the finished prose. When useful, briefly note material assumptions, placeholders, or a small number of consequential editorial choices.
+Unless the request asks for critique only, provide the finished prose. When useful (or asked), briefly note material assumptions, placeholders, a small number of consequential editorial choices, or other information from the Roles.
 
 ## Maintenance
 
