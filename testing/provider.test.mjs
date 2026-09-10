@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { copilotArgs } from "./copilot-provider.mjs";
+import CopilotProvider, { copilotArgs, copilotPrompt } from "./copilot-provider.mjs";
 import { promptfooProviderConfig, selectProvider, selectProviders, validateProvider } from "./provider.mjs";
 
 test("requires explicit candidate and judge models", () => {
@@ -67,6 +67,55 @@ test("rejects an unavailable Copilot CLI before an evaluation starts", () => {
     /GitHub Copilot CLI is not installed.*gh copilot/s,
   );
   assert.doesNotThrow(() => validateProvider(provider, () => ({ status: 0 })));
+});
+
+test("renders Promptfoo chat prompts as instructions rather than raw JSON", () => {
+  const prompt = JSON.stringify([
+    { role: "system", content: "Return only JSON." },
+    { role: "user", content: "Grade this output." },
+  ]);
+  assert.equal(copilotPrompt(prompt), "SYSTEM:\nReturn only JSON.\n\nUSER:\nGrade this output.");
+  assert.equal(copilotPrompt("ordinary prompt"), "ordinary prompt");
+});
+
+test("retries grading responses that contain no JSON", async () => {
+  const calls = [];
+  const responses = ["The output mostly meets the rubric.", '{"reason":"Mostly meets","pass":true,"score":0.8}'];
+  const provider = new CopilotProvider({
+    config: {
+      model: "gpt-5.6-luna",
+      run: async (_command, args) => {
+        calls.push(args);
+        return { stdout: responses.shift() };
+      },
+    },
+  });
+  const gradingPrompt = JSON.stringify([
+    { role: "system", content: "You are grading output according to a user-specified rubric. Respond with JSON." },
+    { role: "user", content: "Grade this output." },
+  ]);
+
+  assert.deepEqual(await provider.callApi(gradingPrompt), {
+    output: '{"reason":"Mostly meets","pass":true,"score":0.8}',
+  });
+  assert.equal(calls.length, 2);
+  assert.match(calls[1][3], /Return only one valid JSON object/);
+});
+
+test("does not retry ordinary prose responses", async () => {
+  let calls = 0;
+  const provider = new CopilotProvider({
+    config: {
+      model: "gpt-5.6-luna",
+      run: async () => {
+        calls += 1;
+        return { stdout: "Finished artifact" };
+      },
+    },
+  });
+
+  assert.deepEqual(await provider.callApi("Write the artifact."), { output: "Finished artifact" });
+  assert.equal(calls, 1);
 });
 
 test("passes Copilot prompts as arguments rather than shell text", () => {
