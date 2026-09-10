@@ -12,16 +12,17 @@ Pass skill names to run only those suites:
 node testing/run-all.mjs writing-prose pull-request
 ```
 
-Select the backend and its native candidate and judge model IDs explicitly:
+Select the backend and the models that run the skill-assisted prompt. The baseline control and rubric judge each use one model, defaulting to the first evaluation model:
 
 ```sh
 EVAL_PROVIDER=copilot \
-EVAL_MODEL=gpt-5.6-luna \
+EVAL_MODELS=gpt-5.6-luna,gpt-6-astra \
+CONTROL_MODEL=gpt-5.6-luna \
 JUDGE_MODEL=gpt-5.6-luna \
   node testing/run-all.mjs
 ```
 
-See [`.envrc.example`](../.envrc.example) for OpenRouter, Bedrock, and OpenAI examples. `--provider` remains a shorthand that overrides the environment and uses one provider/model for both roles.
+`EVAL_MODEL` remains a single-model alias for `EVAL_MODELS`. See [`.envrc.example`](../.envrc.example) for other backends. `--provider` remains a shorthand that uses one provider/model for evaluation, control, and judging.
 
 View the results of a run:
 

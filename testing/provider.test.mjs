@@ -3,15 +3,11 @@ import test from "node:test";
 import CopilotProvider, { copilotArgs, copilotPrompt } from "./copilot-provider.mjs";
 import { promptfooProviderConfig, selectProvider, selectProviders, validateProvider } from "./provider.mjs";
 
-test("requires explicit candidate and judge models", () => {
+test("requires an explicit backend and at least one evaluation model", () => {
   assert.throws(() => selectProviders(undefined, {}), /EVAL_PROVIDER/);
-  assert.throws(() => selectProviders(undefined, { EVAL_PROVIDER: "copilot" }), /EVAL_MODEL/);
+  assert.throws(() => selectProviders(undefined, { EVAL_PROVIDER: "copilot" }), /EVAL_MODELS or EVAL_MODEL/);
   assert.throws(
-    () => selectProviders(undefined, { EVAL_PROVIDER: "copilot", EVAL_MODEL: "gpt-5.6-luna" }),
-    /JUDGE_MODEL/,
-  );
-  assert.throws(
-    () => selectProviders(undefined, { EVAL_PROVIDER: "unknown", EVAL_MODEL: "model", JUDGE_MODEL: "judge" }),
+    () => selectProviders(undefined, { EVAL_PROVIDER: "unknown", EVAL_MODEL: "model" }),
     /Unknown EVAL_PROVIDER/,
   );
 });
@@ -41,23 +37,61 @@ test("resolves the Copilot backend and model in one place", () => {
   assert.equal(override.label, "copilot:gpt-5-mini");
 });
 
-test("configures candidate generation and grading with separate models", () => {
-  const { provider, judgeProvider } = selectProviders(undefined, {
+test("selects multiple evaluation models and one control and judge", () => {
+  const selection = selectProviders(undefined, {
     EVAL_PROVIDER: "copilot",
-    EVAL_MODEL: "gpt-5.6-luna",
-    JUDGE_MODEL: "gpt-5-mini",
+    EVAL_MODELS: "gpt-5.6-luna, gpt-6-astra, gpt-5.6-luna",
+    CONTROL_MODEL: "gpt-5-mini",
+    JUDGE_MODEL: "gpt-6-astra",
   });
-  assert.equal(provider.label, "copilot:gpt-5.6-luna");
-  assert.equal(judgeProvider.label, "copilot:gpt-5-mini");
-  assert.deepEqual(promptfooProviderConfig(provider, judgeProvider), {
-    providers: [provider],
-    defaultTest: { options: { provider: judgeProvider } },
-  });
+  assert.deepEqual(selection.evalProviders.map((provider) => provider.label), [
+    "copilot:gpt-5.6-luna",
+    "copilot:gpt-6-astra",
+  ]);
+  assert.equal(selection.controlProvider.label, "copilot:gpt-5-mini");
+  assert.equal(selection.judgeProvider.label, "copilot:gpt-6-astra");
 });
 
-test("uses an explicit --provider override for candidates and judging", () => {
-  const providers = selectProviders("copilot:gpt-5-mini", {});
-  assert.deepEqual(providers.judgeProvider, providers.provider);
+test("defaults the control and judge to the first evaluation model", () => {
+  const selection = selectProviders(undefined, {
+    EVAL_PROVIDER: "copilot",
+    EVAL_MODELS: "gpt-5.6-luna,gpt-6-astra",
+  });
+  assert.deepEqual(selection.controlProvider, selection.evalProviders[0]);
+  assert.deepEqual(selection.judgeProvider, selection.evalProviders[0]);
+});
+
+test("maps the control and evaluation models to their prompts", () => {
+  const selection = selectProviders(undefined, {
+    EVAL_PROVIDER: "copilot",
+    EVAL_MODELS: "gpt-5.6-luna,gpt-6-astra",
+  });
+  const config = promptfooProviderConfig(selection, "writing-prose");
+  assert.deepEqual(config.providers.map(({ label, prompts }) => ({ label, prompts })), [
+    { label: "copilot:gpt-5.6-luna", prompts: ["control", "writing-prose"] },
+    { label: "copilot:gpt-6-astra", prompts: ["writing-prose"] },
+  ]);
+  assert.equal(config.defaultTest.options.provider.label, "copilot:gpt-5.6-luna");
+});
+
+test("runs a separate control model only against the control prompt", () => {
+  const selection = selectProviders(undefined, {
+    EVAL_PROVIDER: "copilot",
+    EVAL_MODELS: "gpt-5.6-luna,gpt-6-astra",
+    CONTROL_MODEL: "gpt-5-mini",
+  });
+  const config = promptfooProviderConfig(selection, "writing-prose");
+  assert.deepEqual(config.providers.map(({ label, prompts }) => ({ label, prompts })), [
+    { label: "copilot:gpt-5-mini", prompts: ["control"] },
+    { label: "copilot:gpt-5.6-luna", prompts: ["writing-prose"] },
+    { label: "copilot:gpt-6-astra", prompts: ["writing-prose"] },
+  ]);
+});
+
+test("uses an explicit --provider override for candidates, control, and judging", () => {
+  const selection = selectProviders("copilot:gpt-5-mini", {});
+  assert.deepEqual(selection.controlProvider, selection.evalProviders[0]);
+  assert.deepEqual(selection.judgeProvider, selection.evalProviders[0]);
 });
 
 test("rejects an unavailable Copilot CLI before an evaluation starts", () => {

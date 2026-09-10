@@ -15,11 +15,11 @@ nvm use
 
 The runner pins `promptfoo@0.121.20` rather than `@latest`: earlier versions intermittently crash with "Converting circular structure to JSON" when the AWS SDK's Bedrock client leaks a circular reference into a result ([promptfoo#7266](https://github.com/promptfoo/promptfoo/issues/7266), [#8687](https://github.com/promptfoo/promptfoo/issues/8687)); 0.121.6+ carries the fix.
 
-Provider and model selection is shared by all Node-based runners. Set `EVAL_PROVIDER` to `copilot`, `openrouter`, `bedrock`, or `openai`. Set `EVAL_MODEL` to the backend-native model that generates baseline and skill-assisted candidates, and `JUDGE_MODEL` to the model that grades them. Credential variables configure authentication but do not select a backend.
+Provider and model selection is shared by all Node-based runners. Set `EVAL_PROVIDER` to `copilot`, `openrouter`, `bedrock`, or `openai`. Set `EVAL_MODELS` to a comma-separated list of backend-native models that run the skill-assisted prompt; `EVAL_MODEL` remains a single-model alias. `CONTROL_MODEL` generates the baseline and `JUDGE_MODEL` grades every candidate. Each defaults to the first evaluation model. Credential variables configure authentication but do not select a backend.
 
 Model IDs differ by backend. For example, GPT-5.6 Luna is `gpt-5.6-luna` in Copilot and `openai/gpt-5.6-luna` in OpenRouter; Bedrock uses IDs such as `us.anthropic.claude-haiku-4-5-20251001-v1:0`. See [`.envrc.example`](../../.envrc.example) for complete examples.
 
-Copilot uses the authenticated [GitHub Copilot CLI](https://docs.github.com/en/copilot/concepts/agents/about-copilot-cli); run `gh copilot` once to install or authenticate it. `--provider` overrides the environment and uses one provider/model for both roles; the `copilot` shorthand defaults to GPT-5.6 Luna:
+Copilot uses the authenticated [GitHub Copilot CLI](https://docs.github.com/en/copilot/concepts/agents/about-copilot-cli); run `gh copilot` once to install or authenticate it. `--provider` overrides the environment and uses one provider/model for evaluation, control, and judging; the `copilot` shorthand defaults to GPT-5.6 Luna:
 
 ```sh
 node testing/writing-prose/run.mjs --provider copilot
@@ -68,7 +68,7 @@ node testing/writing-prose/prepare-review.mjs \
   testing/writing-prose/runs/<run-name>
 ```
 
-This creates anonymous `a.md` and `b.md` drafts and a private mapping. Give the reviewer the case and [`../../skills/review-prose/rubric.md`](../../skills/review-prose/rubric.md). Have them score both drafts and the automated grade in `review.md`, then reveal `mapping.private.md`. [`review-template.md`](review-template.md) is a starting point.
+This creates an anonymous A/B packet comparing the control with each evaluated model. Single-model runs use `review/<case>/`; multi-model runs use `review/<case>/<model>/`. Give the reviewer the case and [`../../skills/review-prose/rubric.md`](../../skills/review-prose/rubric.md). Have them score both drafts and the automated grade in `review.md`, then reveal `mapping.private.md`. [`review-template.md`](review-template.md) is a starting point.
 
 A human reviewer decides whether a result is useful, accurate, and appropriately brief. Treat recurring failures across cases as evidence for changing a skill; treat a single failure as a case to investigate, not a reason to add generic instructions.
 

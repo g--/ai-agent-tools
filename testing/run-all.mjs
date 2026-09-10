@@ -57,7 +57,7 @@ function main() {
     mkdirSync(suiteDir);
     const skillText = readFileSync(path.join(skillsRoot, skill, "SKILL.md"), "utf8");
     const config = {
-      ...promptfooProviderConfig(options.provider, options.judgeProvider),
+      ...promptfooProviderConfig(options, skill),
       description: `Blinded comparison of control and ${skill}`,
       prompts: [
         { label: "control", raw: "Use only the supplied source material. You may plan before the artifact, but delimit the finished requested artifact exactly as follows:\n\n<artifact>\n[finished artifact only]\n</artifact>\n\nOnly text inside these markers is evaluated.\n\nCASE:\n{{case}}" },
