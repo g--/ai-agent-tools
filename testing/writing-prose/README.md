@@ -57,7 +57,9 @@ npx promptfoo@0.121.20 view \
   testing/writing-prose/runs/<run-name>
 ```
 
-The runner produces two drafts for each case: `baseline` is given the task alone, and `writing-prose` is additionally given the installed skill instructions. The automated assertions use the same selected provider and the outcome rubric in [`../../skills/review-prose/rubric.md`](../../skills/review-prose/rubric.md). They are diagnostic, not a substitute for a reader.
+The runner produces one control draft and one skill-assisted draft per evaluation model. The automated assertions use `JUDGE_MODEL` and the outcome rubric in [`../../skills/review-prose/rubric.md`](../../skills/review-prose/rubric.md). They are diagnostic, not a substitute for a reader.
+
+After evaluation, the runner prints Promptfoo-reported generation cost by model. Rubric-judge calls are excluded, and Copilot CLI cost is reported as unavailable.
 
 ## Human spot check
 

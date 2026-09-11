@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { PROMPTFOO_VERSION, PROVIDER_HELP, promptfooProviderConfig, selectProviders, validateProvider } from "./provider.mjs";
 import { candidateCase } from "./case.mjs";
+import { formatCosts, summarizeCosts } from "./cost.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "..");
@@ -48,6 +49,7 @@ function main() {
   const runDir = path.join(here, "runs", options.name ?? stamp());
   if (existsSync(runDir)) throw new Error(`Run directory already exists: ${runDir}`);
   mkdirSync(runDir, { recursive: true });
+  const resultPaths = [];
   const buildJudge = (golden) => `Act as the intended reader and a rigorous prose reviewer. Evaluate only the content between \`<artifact>\` and \`</artifact>\`; it is the finished artifact. Ignore everything outside those markers, including any planning, thinking, headings, or commentary. Do not lower a score because those excluded sections exist or are imperfect. Quote evidence from the artifact.\n\nCASE:\n{{fullCase}}\n${golden ? `\nREFERENCE (hand-approved for this case; the artifact should meet or exceed this quality bar, though it need not match it exactly):\n${golden}\n` : ""}\nRUBRIC:\n${rubric}`;
 
   for (const skill of skills) {
@@ -74,17 +76,19 @@ function main() {
     writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
     console.log(`${skill}: ${cases.join(", ")}`);
     if (!options.dryRun) {
+      const resultsPath = path.join(suiteDir, "promptfoo-results.json");
       // A failed rubric assertion is a finding to review, not a harness failure.
       // Promptfoo exits non-zero when any assertion fails even after writing results.
       try {
-        execFileSync("npx", [`promptfoo@${PROMPTFOO_VERSION}`, "eval", "-c", configPath, "-o", path.join(suiteDir, "promptfoo-results.json")], { cwd: root, stdio: "inherit" });
+        execFileSync("npx", [`promptfoo@${PROMPTFOO_VERSION}`, "eval", "-c", configPath, "-o", resultsPath], { cwd: root, stdio: "inherit" });
       } catch (error) {
-        const resultsPath = path.join(suiteDir, "promptfoo-results.json");
         if (!existsSync(resultsPath)) throw error;
         console.warn(`${skill}: Promptfoo recorded failing assertions; continuing so every suite is available for review.`);
       }
+      resultPaths.push(resultsPath);
     }
   }
+  if (!options.dryRun) console.log(formatCosts(summarizeCosts(resultPaths)));
   console.log(`Run directory: ${runDir}`);
   console.log(options.dryRun ? "Configuration generated." : `Inspect: npx promptfoo@${PROMPTFOO_VERSION} view ${runDir}`);
   if (!options.dryRun) console.log(`Prepare blind review: node testing/prepare-all-review.mjs ${runDir}`);

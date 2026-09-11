@@ -24,6 +24,8 @@ JUDGE_MODEL=gpt-5.6-luna \
 
 `EVAL_MODEL` remains a single-model alias for `EVAL_MODELS`. See [`.envrc.example`](../.envrc.example) for other backends. `--provider` remains a shorthand that uses one provider/model for evaluation, control, and judging.
 
+After evaluation, the runner prints Promptfoo-reported generation cost by model and a known-cost total. Rubric-judge calls are not included; Copilot CLI cost is reported as unavailable.
+
 View the results of a run:
 
 ```sh

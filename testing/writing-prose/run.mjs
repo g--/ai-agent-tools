@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { PROMPTFOO_VERSION, PROVIDER_HELP, promptfooProviderConfig, selectProviders, validateProvider } from "../provider.mjs";
 import { candidateCase } from "../case.mjs";
+import { formatCosts, summarizeCosts } from "../cost.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "../..");
@@ -134,6 +135,7 @@ function main() {
       throw error;
     }
   }
+  console.log(formatCosts(summarizeCosts([outputPath])));
   console.log(`Results: ${outputPath}`);
   console.log(`Inspect: npx promptfoo@${PROMPTFOO_VERSION} view ${runDir}`);
   console.log(`Prepare blinded review: node testing/writing-prose/prepare-review.mjs ${runDir}`);
